@@ -1,0 +1,25 @@
+[package]
+name = "zenide"
+version = "0.1.0"
+description = "ZenIDE - a minimal cross-platform IDE for Rust, C++ and Python"
+authors = ["ZenIDE"]
+edition = "2021"
+
+[lib]
+name = "zenide_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+notify = "6"
+portable-pty = "0.8"
+base64 = "0.22"
+walkdir = "2"
+dirs = "5"
