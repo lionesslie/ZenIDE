@@ -16,14 +16,14 @@ type Section =
   | "keys";
 
 const sections: { id: Section; label: string }[] = [
-  { id: "general", label: "Genel" },
-  { id: "editor", label: "Editör" },
+  { id: "general", label: "General" },
+  { id: "editor", label: "Editor" },
   { id: "terminal", label: "Terminal" },
-  { id: "lsp", label: "Dil Sunucuları" },
-  { id: "build", label: "Derleme" },
-  { id: "debug", label: "Hata Ayıklama" },
-  { id: "explorer", label: "Gezgin" },
-  { id: "keys", label: "Kısayollar" },
+  { id: "lsp", label: "Language Servers" },
+  { id: "build", label: "Build" },
+  { id: "debug", label: "Debug" },
+  { id: "explorer", label: "Explorer" },
+  { id: "keys", label: "Keybindings" },
 ];
 
 function clone(config: ZenConfig): ZenConfig {
@@ -51,7 +51,7 @@ function ArgsField({
     <input
       className="form-input"
       value={text}
-      placeholder={placeholder ?? "Boşlukla ayırın"}
+      placeholder={placeholder ?? "Space separated"}
       onFocus={() => {
         focused.current = true;
       }}
@@ -219,7 +219,7 @@ export function SettingsModal() {
                     />
                   </div>
                   <div className="settings-row">
-                    <label className="settings-label">Kenarlık</label>
+                    <label className="settings-label">Border</label>
                     <ColorField
                       value={draft.theme.border}
                       onChange={(value) => updateTheme({ border: value })}
@@ -240,7 +240,7 @@ export function SettingsModal() {
                     />
                   </div>
                   <div className="settings-row">
-                    <label className="settings-label">Editör arka planı</label>
+                    <label className="settings-label">Editor background</label>
                     <ColorField
                       value={draft.theme.editor_background}
                       onChange={(value) =>
@@ -250,9 +250,9 @@ export function SettingsModal() {
                   </div>
                 </div>
                 <div className="settings-section">
-                  <h3>Yerleşim</h3>
+                  <h3>Layout</h3>
                   <div className="settings-row">
-                    <label className="settings-label">Kenar çubuğu genişliği</label>
+                    <label className="settings-label">Sidebar width</label>
                     <input
                       className="form-input number"
                       type="number"
@@ -265,7 +265,7 @@ export function SettingsModal() {
                     />
                   </div>
                   <div className="settings-row">
-                    <label className="settings-label">Alt panel yüksekliği</label>
+                    <label className="settings-label">Bottom panel height</label>
                     <input
                       className="form-input number"
                       type="number"
@@ -280,7 +280,7 @@ export function SettingsModal() {
                     />
                   </div>
                   <div className="settings-row">
-                    <label className="settings-label">Sağ panel genişliği</label>
+                    <label className="settings-label">Right panel width</label>
                     <input
                       className="form-input number"
                       type="number"
@@ -300,7 +300,7 @@ export function SettingsModal() {
                         updateUi({ show_right_panel: event.target.checked })
                       }
                     />
-                    Sağ panel açık başlasın
+                    Open right panel on start
                   </label>
                 </div>
               </>
@@ -308,9 +308,9 @@ export function SettingsModal() {
 
             {section === "editor" && (
               <div className="settings-section">
-                <h3>Editör</h3>
+                <h3>Editor</h3>
                 <div className="settings-row">
-                  <label className="settings-label">Yazı tipi</label>
+                  <label className="settings-label">Font</label>
                   <input
                     className="form-input"
                     value={draft.editor.font_family}
@@ -363,7 +363,7 @@ export function SettingsModal() {
                       updateEditor({ word_wrap: event.target.checked })
                     }
                   />
-                  Sözcük kaydırma
+                  Word wrap
                 </label>
                 <label className="checkbox-label">
                   <input
@@ -383,7 +383,7 @@ export function SettingsModal() {
                       updateEditor({ line_numbers: event.target.checked })
                     }
                   />
-                  Satır numaraları
+                  Line numbers
                 </label>
               </div>
             )}
@@ -395,7 +395,7 @@ export function SettingsModal() {
                   <label className="settings-label">Kabuk</label>
                   <input
                     className="form-input"
-                    placeholder="Boş = sistem varsayılanı"
+                    placeholder="Empty = system default"
                     value={draft.terminal.shell}
                     onChange={(event) =>
                       updateTerminal({ shell: event.target.value })
@@ -403,7 +403,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">Yazı tipi</label>
+                  <label className="settings-label">Font</label>
                   <input
                     className="form-input"
                     value={draft.terminal.font_family}
@@ -426,7 +426,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">Geri kaydırma</label>
+                  <label className="settings-label">Scrollback</label>
                   <input
                     className="form-input number"
                     type="number"
@@ -440,17 +440,17 @@ export function SettingsModal() {
                   />
                 </div>
                 <p className="settings-hint">
-                  Yeni terminaller için geçerlidir. Değişiklikler kaydedildiğinde
-                  açık terminallerin yazı tipi de güncellenir.
+                  Applies to new terminals. When saved, open terminals' font is
+                  also updated.
                 </p>
               </div>
             )}
 
             {section === "lsp" && (
               <div className="settings-section">
-                <h3>Dil Sunucuları</h3>
+                <h3>Language Servers</h3>
                 <p className="settings-hint">
-                  Boş bırakılan yollar PATH üzerinden aranır (rust-analyzer,
+                  Empty paths are resolved via PATH (rust-analyzer,
                   clangd, pylsp / pyright-langserver).
                 </p>
                 <div className="settings-row">
@@ -465,7 +465,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">rust-analyzer argümanları</label>
+                  <label className="settings-label">rust-analyzer arguments</label>
                   <ArgsField
                     value={draft.lsp.rust_analyzer_args}
                     onChange={(value) => updateLsp({ rust_analyzer_args: value })}
@@ -483,7 +483,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">clangd argümanları</label>
+                  <label className="settings-label">clangd arguments</label>
                   <ArgsField
                     value={draft.lsp.clangd_args}
                     onChange={(value) => updateLsp({ clangd_args: value })}
@@ -525,7 +525,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">Python yorumlayıcısı</label>
+                  <label className="settings-label">Python interpreter</label>
                   <input
                     className="form-input"
                     placeholder="python"
@@ -540,9 +540,9 @@ export function SettingsModal() {
 
             {section === "build" && (
               <div className="settings-section">
-                <h3>Derleme ve Çalıştırma</h3>
+                <h3>Build and Run</h3>
                 <div className="settings-row">
-                  <label className="settings-label">cargo ek argümanları</label>
+                  <label className="settings-label">cargo extra arguments</label>
                   <ArgsField
                     value={draft.build.cargo_extra_args}
                     onChange={(value) =>
@@ -551,7 +551,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">cmake ek argümanları</label>
+                  <label className="settings-label">cmake extra arguments</label>
                   <ArgsField
                     value={draft.build.cmake_extra_args}
                     onChange={(value) =>
@@ -560,7 +560,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">python ek argümanları</label>
+                  <label className="settings-label">python extra arguments</label>
                   <ArgsField
                     value={draft.build.python_extra_args}
                     onChange={(value) =>
@@ -569,7 +569,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">CMake derleme klasörü</label>
+                  <label className="settings-label">CMake build directory</label>
                   <input
                     className="form-input"
                     value={draft.build.cmake_build_dir}
@@ -579,15 +579,15 @@ export function SettingsModal() {
                   />
                 </div>
                 <p className="settings-hint">
-                  CMake projelerinde clangd, derleme klasöründeki
-                  compile_commands.json dosyasını kullanır.
+                  In CMake projects clangd uses compile_commands.json from the
+                  build directory.
                 </p>
               </div>
             )}
 
             {section === "debug" && (
               <div className="settings-section">
-                <h3>Hata Ayıklama</h3>
+                <h3>Debug</h3>
                 <div className="settings-row">
                   <label className="settings-label">lldb-dap yolu</label>
                   <input
@@ -603,7 +603,7 @@ export function SettingsModal() {
                   <label className="settings-label">debugpy Python yolu</label>
                   <input
                     className="form-input"
-                    placeholder="python (debugpy kurulu olmalı)"
+                    placeholder="python (debugpy must be installed)"
                     value={draft.debug.debugpy_path}
                     onChange={(event) =>
                       updateDebug({ debugpy_path: event.target.value })
@@ -611,7 +611,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">Rust programı</label>
+                  <label className="settings-label">Rust program</label>
                   <input
                     className="form-input"
                     placeholder="target/debug/uygulama"
@@ -622,7 +622,7 @@ export function SettingsModal() {
                   />
                 </div>
                 <div className="settings-row">
-                  <label className="settings-label">C++ programı</label>
+                  <label className="settings-label">C++ program</label>
                   <input
                     className="form-input"
                     placeholder="build/bin/uygulama"
@@ -633,8 +633,8 @@ export function SettingsModal() {
                   />
                 </div>
                 <p className="settings-hint">
-                  Rust/C++ için lldb-dap, Python için debugpy gerekir. Boş
-                  bırakılırsa PATH üzerinden aranır.
+                  lldb-dap for Rust/C++, debugpy for Python. Empty
+                  values are resolved via PATH.
                 </p>
               </div>
             )}
@@ -643,7 +643,7 @@ export function SettingsModal() {
               <div className="settings-section">
                 <h3>Gezgin</h3>
                 <p className="settings-hint">
-                  Dışlanan klasör/dosya adları (her satır bir ad).
+                  Excluded folder/file names (one per line).
                 </p>
                 <textarea
                   className="form-input exclude-textarea"
@@ -663,10 +663,10 @@ export function SettingsModal() {
 
             {section === "keys" && (
               <div className="settings-section">
-                <h3>Klavye Kısayolları</h3>
+                <h3>Keyboard Shortcuts</h3>
                 <p className="settings-hint">
-                  Örnek: Ctrl+S, Ctrl+Shift+P, F5, Shift+Alt+F. Değişiklikler
-                  kaydedildiğinde etkinleşir.
+                  Example: Ctrl+S, Ctrl+Shift+P, F5, Shift+Alt+F. Changes
+                  take effect when saved.
                 </p>
                 {keybindingLabels.map((item) => (
                   <div className="settings-row" key={item.action}>
@@ -693,13 +693,13 @@ export function SettingsModal() {
                 useStore.getState().setSettingsOpen(false);
               }}
             >
-              Config Dosyasını Aç
+              Open Config File
             </button>
             <button
               className="secondary-button"
               onClick={() => setDraft(clone(defaultConfig))}
             >
-              Varsayılanlara Sıfırla
+              Reset to Defaults
             </button>
           </div>
           <div className="settings-actions">
@@ -707,7 +707,7 @@ export function SettingsModal() {
               className="secondary-button"
               onClick={() => useStore.getState().setSettingsOpen(false)}
             >
-              İptal
+              Cancel
             </button>
             <button className="primary-button" onClick={() => void save()}>
               Kaydet

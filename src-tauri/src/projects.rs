@@ -157,7 +157,7 @@ fn detect_kind(root: &Path) -> String {
 pub fn detect_project(root: String) -> Result<ProjectInfo, String> {
     let path = Path::new(&root);
     if !path.is_dir() {
-        return Err("Proje klasörü bulunamadı.".into());
+        return Err("Project folder not found.".into());
     }
     let kind = detect_kind(path);
     let venv = find_venv(path);
@@ -200,10 +200,10 @@ fn sanitize_identifier(name: &str) -> String {
 fn validate_name(name: &str) -> Result<(), String> {
     let trimmed = name.trim();
     if trimmed.is_empty() {
-        return Err("Proje adı boş olamaz.".into());
+        return Err("Project name cannot be empty.".into());
     }
     if trimmed.contains('/') || trimmed.contains('\\') || trimmed.contains("..") {
-        return Err("Proje adı yol ayırıcı içeremez.".into());
+        return Err("Project name cannot contain path separators.".into());
     }
     Ok(())
 }
@@ -224,7 +224,7 @@ fn spawn_venv(root: &Path, python: &str) -> Result<(), String> {
     cmd.current_dir(root);
     let output = cmd
         .output()
-        .map_err(|e| format!("Python çalıştırılamadı ({python}): {e}"))?;
+        .map_err(|e| format!("Python could not be run ({python}): {e}"))?;
     if !output.status.success() {
         return Err(String::from_utf8_lossy(&output.stderr).to_string());
     }
@@ -240,13 +240,13 @@ fn create_project_blocking(
     validate_name(&name)?;
     let parent_path = Path::new(&parent);
     if !parent_path.is_dir() {
-        return Err("Üst klasör bulunamadı.".into());
+        return Err("Parent folder not found.".into());
     }
     let root = parent_path.join(name.trim());
     if root.exists() {
-        return Err("Bu isimde bir klasör zaten var.".into());
+        return Err("A folder with this name already exists.".into());
     }
-    fs::create_dir_all(&root).map_err(|e| format!("Proje klasörü oluşturulamadı: {e}"))?;
+    fs::create_dir_all(&root).map_err(|e| format!("Project folder could not be created: {e}"))?;
     let ident = sanitize_identifier(name.trim());
 
     match kind.as_str() {
@@ -305,7 +305,7 @@ fn create_project_blocking(
             let python = python_path.unwrap_or_else(|| "python".into());
             let _ = spawn_venv(&root, &python);
         }
-        _ => return Err("Bilinmeyen proje türü.".into()),
+        _ => return Err("Unknown project type.".into()),
     }
 
     Ok(root.to_string_lossy().to_string())
@@ -330,7 +330,7 @@ pub async fn create_venv(root: String, python_path: String) -> Result<String, St
     tauri::async_runtime::spawn_blocking(move || {
         let root_path = PathBuf::from(&root);
         if !root_path.is_dir() {
-            return Err("Proje klasörü bulunamadı.".into());
+            return Err("Project folder not found.".into());
         }
         let python = if python_path.trim().is_empty() {
             "python".to_string()
@@ -344,7 +344,7 @@ pub async fn create_venv(root: String, python_path: String) -> Result<String, St
         if target.exists() {
             Ok(target.to_string_lossy().to_string())
         } else {
-            Err("Sanal ortam oluşturulamadı. Python yolunu kontrol edin.".into())
+            Err("Virtual environment could not be created. Check the Python path.".into())
         }
     })
     .await

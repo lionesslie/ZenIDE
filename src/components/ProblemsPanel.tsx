@@ -12,8 +12,8 @@ function severityIcon(severity: number) {
 }
 
 function severityLabel(severity: number): string {
-  if (severity === 1) return "Hata";
-  if (severity === 2) return "Uyarı";
+  if (severity === 1) return "Error";
+  if (severity === 2) return "Warning";
   return "Bilgi";
 }
 
@@ -49,25 +49,25 @@ export function ProblemsPanel() {
           className={`filter-chip ${filter === "all" ? "active" : ""}`}
           onClick={() => setFilter("all")}
         >
-          Tümü ({problems.length})
+          All ({problems.length})
         </button>
         <button
           className={`filter-chip ${filter === "error" ? "active" : ""}`}
           onClick={() => setFilter("error")}
         >
-          Hatalar ({errors})
+          Errors ({errors})
         </button>
         <button
           className={`filter-chip ${filter === "warning" ? "active" : ""}`}
           onClick={() => setFilter("warning")}
         >
-          Uyarılar ({warnings})
+          Warnings ({warnings})
         </button>
       </div>
       {filtered.length === 0 ? (
         <div className="empty-panel small">
           {problems.length === 0
-            ? "Sorun yok. Dil sunucuları hazır olduğunda sonuçlar burada görünür."
+            ? "No problems. Results appear here when language servers are ready."
             : "Bu filtreye uyan sorun yok."}
         </div>
       ) : (

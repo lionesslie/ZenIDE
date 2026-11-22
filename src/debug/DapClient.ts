@@ -36,7 +36,7 @@ export class DapClient {
       if (message.success) {
         pending.resolve(message.body ?? {});
       } else {
-        pending.reject(new Error(message.message ?? "DAP isteği başarısız."));
+        pending.reject(new Error(message.message ?? "DAP request failed."));
       }
       return;
     }
@@ -54,7 +54,7 @@ export class DapClient {
       this.send({ seq, type: "request", command, arguments: args });
       window.setTimeout(() => {
         if (this.pending.delete(seq)) {
-          reject(new Error(`DAP zaman aşımı: ${command}`));
+          reject(new Error(`DAP timeout: ${command}`));
         }
       }, timeout);
     });
@@ -85,7 +85,7 @@ export class DapClient {
     });
   }
 
-  failPending(message = "Hata ayıklama bağlantısı kapandı."): void {
+  failPending(message = "Debug connection closed."): void {
     for (const pending of this.pending.values()) {
       pending.reject(new Error(message));
     }

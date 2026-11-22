@@ -8,10 +8,10 @@ import { CloseIcon, PlusIcon, RefreshIcon } from "./Icons";
 import { openFolder } from "../actions";
 
 const titles: Record<string, string> = {
-  explorer: "GEZGİN",
-  search: "ARAMA",
-  git: "KAYNAK KONTROLÜ",
-  debug: "HATA AYIKLAMA",
+  explorer: "EXPLORER",
+  search: "SEARCH",
+  git: "SOURCE CONTROL",
+  debug: "DEBUG",
   python: "PYTHON",
 };
 
@@ -75,7 +75,7 @@ export function Sidebar() {
           </span>
           <button
             className="icon-button small"
-            title="Başka klasör aç"
+            title="Open another folder"
             onClick={() => void openFolder()}
           >
             …

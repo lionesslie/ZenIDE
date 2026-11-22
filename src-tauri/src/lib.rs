@@ -8,6 +8,9 @@ mod projects;
 mod pty;
 
 pub fn run() {
+    // Avoid GBM buffer creation failures on some Linux/Wayland setups.
+    std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
+    std::env::set_var("GDK_BACKEND", "x11,wayland");
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(pty::PtyState::default())

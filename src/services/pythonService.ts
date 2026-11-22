@@ -23,7 +23,7 @@ export async function refreshPythonPackages(
       workspace
     );
     if (result.code !== 0) {
-      throw new Error(result.stderr.trim() || "pip list çalıştırılamadı.");
+      throw new Error(result.stderr.trim() || "pip list could not be run.");
     }
     const parsed = JSON.parse(result.stdout || "[]");
     const packages = (Array.isArray(parsed) ? parsed : [])
@@ -56,7 +56,7 @@ export async function installPythonPackage(name: string): Promise<boolean> {
       workspace
     );
     if (result.code !== 0) {
-      throw new Error(result.stderr.trim() || "Paket kurulamadı.");
+      throw new Error(result.stderr.trim() || "Package could not be installed.");
     }
     store.toast(`Paket kuruldu: ${name.trim()}`, "success");
     await refreshPythonPackages(true);
@@ -84,9 +84,9 @@ export async function uninstallPythonPackage(
       workspace
     );
     if (result.code !== 0) {
-      throw new Error(result.stderr.trim() || "Paket kaldırılamadı.");
+      throw new Error(result.stderr.trim() || "Package could not be removed.");
     }
-    store.toast(`Paket kaldırıldı: ${name}`, "success");
+    store.toast(`Package removed: ${name}`, "success");
     await refreshPythonPackages(true);
     return true;
   } catch (error) {
@@ -105,7 +105,7 @@ export async function createProjectVenv(): Promise<void> {
   try {
     const python = config.lsp.python_path.trim() || "python";
     const result = await api.createVenv(workspace, python);
-    store.toast(`Sanal ortam hazır: ${result}`, "success");
+    store.toast(`Virtual environment ready: ${result}`, "success");
     await store.refreshProject();
     await refreshPythonPackages(true);
   } catch (error) {

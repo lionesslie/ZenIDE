@@ -86,7 +86,7 @@ export class LspClient {
     for (const handler of this.exitHandlers) handler();
   }
 
-  failPending(message = "Dil sunucusu bağlantısı kapandı."): void {
+  failPending(message = "Language server connection closed."): void {
     this.ready = false;
     for (const pending of this.pending.values()) {
       pending.reject(new Error(message));
@@ -102,7 +102,7 @@ export class LspClient {
 
   request(method: string, params: any, timeout = 30_000): Promise<any> {
     if (!this.session) {
-      return Promise.reject(new Error("Dil sunucusu başlatılmadı."));
+      return Promise.reject(new Error("Language server not started."));
     }
     const id = this.nextId++;
     return new Promise((resolve, reject) => {
@@ -110,7 +110,7 @@ export class LspClient {
       this.send({ jsonrpc: "2.0", id, method, params });
       window.setTimeout(() => {
         if (this.pending.delete(id)) {
-          reject(new Error(`LSP zaman aşımı: ${method}`));
+          reject(new Error(`LSP timeout: ${method}`));
         }
       }, timeout);
     });

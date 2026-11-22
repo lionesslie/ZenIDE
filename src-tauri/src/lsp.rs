@@ -78,9 +78,9 @@ pub fn lsp_start(
 
     let mut child = cmd
         .spawn()
-        .map_err(|e| format!("Dil sunucusu başlatılamadı ({program}): {e}"))?;
-    let stdin = child.stdin.take().ok_or("LSP stdin alınamadı.")?;
-    let stdout = child.stdout.take().ok_or("LSP stdout alınamadı.")?;
+        .map_err(|e| format!("Language server could not be started ({program}): {e}"))?;
+    let stdin = child.stdin.take().ok_or("LSP stdin could not be obtained.")?;
+    let stdout = child.stdout.take().ok_or("LSP stdout could not be obtained.")?;
     let stderr = child.stderr.take();
     let id = state.next.fetch_add(1, Ordering::SeqCst) + 1;
 
@@ -146,7 +146,7 @@ pub fn lsp_send(
     let sessions = state.sessions.lock().unwrap();
     let entry = sessions
         .get(&session)
-        .ok_or_else(|| "LSP oturumu bulunamadı.".to_string())?;
+        .ok_or_else(|| "LSP session not found.".to_string())?;
     let mut stdin = entry.stdin.lock().unwrap();
     write!(
         stdin,
@@ -155,7 +155,7 @@ pub fn lsp_send(
         message
     )
     .and_then(|_| stdin.flush())
-    .map_err(|e| format!("LSP'ye yazılamadı: {e}"))
+    .map_err(|e| format!("Could not write to LSP: {e}"))
 }
 
 #[tauri::command]

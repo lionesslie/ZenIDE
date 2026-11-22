@@ -28,6 +28,31 @@ function Svg({
   );
 }
 
+export function MinimizeIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M3 8h10" />
+    </Svg>
+  );
+}
+
+export function MaximizeIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <rect x="3.2" y="3.2" width="9.6" height="9.6" rx="1.4" />
+    </Svg>
+  );
+}
+
+export function RestoreIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <rect x="2.6" y="5.4" width="8" height="8" rx="1.1" />
+      <path d="M5.4 5.4V4.3c0-.6.5-1.1 1.1-1.1h5.2c.6 0 1.1.5 1.1 1.1v5.2c0 .6-.5 1.1-1.1 1.1h-1.1" />
+    </Svg>
+  );
+}
+
 export function FilesIcon(props: IconProps) {
   return (
     <Svg {...props}>

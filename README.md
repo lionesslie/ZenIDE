@@ -1,6 +1,6 @@
 # ZenIDE
 
-Rust, C++ ve Python odaklı, Tauri v2 + React + Monaco tabanlı hafif ve çapraz platform IDE.
+Tauri v2 + React + Monaco based lightweight, cross-platform IDE.
 
 ## Özellikler
 
@@ -16,6 +16,14 @@ Rust, C++ ve Python odaklı, Tauri v2 + React + Monaco tabanlı hafif ve çapraz
 - Hızlı açma (Ctrl+P), tema, Türkçe arayüz, durum çubuğu, bildirimler.
 
 ## Gereksinimler
+
+Linux için WebKitGTK bağımlılıkları gereklidir:
+```bash
+# Arch
+sudo pacman -S webkit2gtk-4.1
+# Debian/Ubuntu
+sudo apt install libwebkit2gtk-4.1-dev libjavascriptcoregtk-4.1-dev
+```
 
 - Node.js 18+ ve npm
 - Rust stable (MSVC toolchain) ve Visual Studio Build Tools (C++ iş yükü)
@@ -109,12 +117,12 @@ minimap = true
 line_numbers = true
 
 [theme]
-background = "#1e1f22"
-panel = "#2b2d30"
-border = "#393b40"
-text = "#bcbec4"
-accent = "#4a88ff"
-editor_background = "#1e1f22"
+background = "#0b0b0c"
+panel = "#151517"
+border = "#27272b"
+text = "#f0f0f2"
+accent = "#d9d9de"
+editor_background = "#08080a"
 
 [ui]
 sidebar_width = 270

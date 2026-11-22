@@ -61,7 +61,7 @@ function VariableRow({
           className="variable-loading"
           style={{ paddingLeft: 24 + depth * 12 }}
         >
-          yükleniyor…
+          loading…
         </div>
       )}
       {expanded &&
@@ -84,7 +84,7 @@ export function VariablesView() {
   if (!debugActive) {
     return (
       <div className="empty-panel small">
-        Değişkenleri görmek için hata ayıklama oturumu başlatın.
+        Start a debug session to see variables.
       </div>
     );
   }
@@ -92,7 +92,7 @@ export function VariablesView() {
   if (scopes.length === 0) {
     return (
       <div className="empty-panel small">
-        Değişken yok. Program duraklatıldığında kapsamlar burada görünür.
+        No variables. Scopes appear here when paused.
       </div>
     );
   }
@@ -103,7 +103,7 @@ export function VariablesView() {
         <div className="scope-group" key={`${scope.name}-${scope.variablesReference}`}>
           <div className="scope-title">{scope.name}</div>
           {scope.variables.length === 0 && (
-            <div className="empty-panel small">Boş kapsam.</div>
+            <div className="empty-panel small">Empty scope.</div>
           )}
           {scope.variables.map((variable, index) => (
             <VariableRow

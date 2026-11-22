@@ -32,7 +32,7 @@ export async function reloadConfigFromDisk(): Promise<void> {
   try {
     const config = await api.reloadConfig();
     useStore.getState().applyConfig(config);
-    useStore.getState().toast("Ayarlar yeniden yüklendi.", "success");
+    useStore.getState().toast("Settings reloaded.", "success");
   } catch (error) {
     useStore.getState().toast(String(error), "error");
   }
@@ -129,7 +129,7 @@ export async function runAction(action: string): Promise<void> {
     case "lsp_restart":
       await lspManager.shutdownAll();
       await lspManager.reopenAll();
-      store.toast("Dil sunucuları yeniden başlatıldı.", "success");
+      store.toast("Language servers restarted.", "success");
       break;
     default:
       break;

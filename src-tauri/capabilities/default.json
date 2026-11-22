@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Default capabilities for the ZenIDE main window",
   "windows": ["main"],
-  "permissions": ["core:default", "dialog:default"]
+  "permissions": ["core:default", "dialog:default", "core:window:allow-minimize", "core:window:allow-maximize", "core:window:allow-unmaximize", "core:window:allow-close", "core:window:allow-start-dragging"]
 }

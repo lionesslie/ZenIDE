@@ -78,9 +78,9 @@ pub fn dap_start(
 
     let mut child = cmd
         .spawn()
-        .map_err(|e| format!("Hata ayıklayıcı başlatılamadı ({program}): {e}"))?;
-    let stdin = child.stdin.take().ok_or("DAP stdin alınamadı.")?;
-    let stdout = child.stdout.take().ok_or("DAP stdout alınamadı.")?;
+        .map_err(|e| format!("Debugger could not be started ({program}): {e}"))?;
+    let stdin = child.stdin.take().ok_or("DAP stdin could not be obtained.")?;
+    let stdout = child.stdout.take().ok_or("DAP stdout could not be obtained.")?;
     let stderr = child.stderr.take();
     let id = state.next.fetch_add(1, Ordering::SeqCst) + 1;
 
@@ -146,7 +146,7 @@ pub fn dap_send(
     let sessions = state.sessions.lock().unwrap();
     let entry = sessions
         .get(&session)
-        .ok_or_else(|| "DAP oturumu bulunamadı.".to_string())?;
+        .ok_or_else(|| "DAP session not found.".to_string())?;
     let mut stdin = entry.stdin.lock().unwrap();
     write!(
         stdin,
@@ -155,7 +155,7 @@ pub fn dap_send(
         message
     )
     .and_then(|_| stdin.flush())
-    .map_err(|e| format!("DAP'ye yazılamadı: {e}"))
+    .map_err(|e| format!("Could not write to DAP: {e}"))
 }
 
 #[tauri::command]

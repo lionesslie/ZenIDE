@@ -44,7 +44,7 @@ fn run_git(root: &str, args: &[&str]) -> Result<Output, String> {
         .current_dir(root)
         .stdin(Stdio::null())
         .output()
-        .map_err(|e| format!("Git çalıştırılamadı: {e}"))
+        .map_err(|e| format!("Git could not be run: {e}"))
 }
 
 fn combined_output(output: &Output) -> String {
@@ -85,7 +85,7 @@ pub async fn git_status(root: String) -> Result<GitStatus, String> {
                 is_repo: false,
                 branch: String::new(),
                 entries: Vec::new(),
-                error: Some("Bu klasör bir git deposu değil.".into()),
+                error: Some("This folder is not a git repository.".into()),
             });
         }
 

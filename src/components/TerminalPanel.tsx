@@ -54,7 +54,7 @@ function ensureListeners(): Promise<void> {
     });
     await api.onEvent<{ id: number }>("pty-exit", (payload) => {
       const session = terminalMap.get(payload.id);
-      session?.term.write("\r\n\x1b[90m[İşlem sonlandı]\x1b[0m\r\n");
+      session?.term.write("\r\n\x1b[90m[Process exited]\x1b[0m\r\n");
       exitHandlers.get(payload.id)?.();
     });
     listenersReady = true;
@@ -118,23 +118,23 @@ export function TerminalPanel() {
       theme: {
         background: theme.background,
         foreground: theme.text,
-        cursor: "#d4d4d4",
-        selectionBackground: "#2b4b7a",
-        black: "#1e1f22",
-        brightBlack: "#5c6370",
+        cursor: "#e4e4e8",
+        selectionBackground: "#3a3a40",
+        black: "#0b0b0c",
+        brightBlack: "#6a6a72",
         red: "#e5484d",
         brightRed: "#ff6b6f",
         green: "#6aab73",
         brightGreen: "#8fd39a",
         yellow: "#d6a44a",
         brightYellow: "#f0c674",
-        blue: "#4a88ff",
-        brightBlue: "#74a7ff",
+        blue: "#8fa8c8",
+        brightBlue: "#b4c6dc",
         magenta: "#c678dd",
         brightMagenta: "#e29cf0",
         cyan: "#2aacb8",
         brightCyan: "#5fd4de",
-        white: "#bcbec4",
+        white: "#f0f0f2",
         brightWhite: "#ffffff",
       },
     });
@@ -170,7 +170,7 @@ export function TerminalPanel() {
       void api.ptyResize(id, cols, rows).catch(() => undefined);
     });
 
-    term.write("\x1b[90mZenIDE terminali başlatılıyor…\x1b[0m\r\n");
+    term.write("\x1b[90mStarting ZenIDE terminal…\x1b[0m\r\n");
     const cols = Math.max(term.cols, 80);
     const rows = Math.max(term.rows, 24);
     try {
@@ -182,7 +182,7 @@ export function TerminalPanel() {
         rows
       );
     } catch (error) {
-      term.write(`\r\n\x1b[31mTerminal başlatılamadı: ${String(error)}\x1b[0m\r\n`);
+      term.write(`\r\n\x1b[31mFailed to start terminal: ${String(error)}\x1b[0m\r\n`);
     }
     activate(id);
   };
@@ -269,7 +269,7 @@ export function TerminalPanel() {
   if (!api.isTauri) {
     return (
       <div className="empty-panel">
-        <p>Terminal yalnızca masaüstü uygulamasında kullanılabilir.</p>
+        <p>Terminal is only available in the desktop app.</p>
       </div>
     );
   }

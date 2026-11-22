@@ -90,7 +90,7 @@ function TreeNode({
     if (expanded) {
       void loadChildren();
     }
-  }, [expanded, treeVersion]);
+  }, [expanded, treeVersion, excludes]);
 
   const handleClick = () => {
     if (entry.is_dir) {
@@ -156,12 +156,12 @@ function TreeNode({
         </span>
         <span className="tree-name">{entry.name}</span>
         {problems && problems.errors > 0 && (
-          <span className="tree-problem error" title={`${problems.errors} hata`}>
+          <span className="tree-problem error" title={`${problems.errors} errors`}>
             {problems.errors}
           </span>
         )}
         {problems && problems.errors === 0 && problems.warnings > 0 && (
-          <span className="tree-problem warning" title={`${problems.warnings} uyarı`}>
+          <span className="tree-problem warning" title={`${problems.warnings} warnings`}>
             {problems.warnings}
           </span>
         )}
@@ -181,7 +181,7 @@ function TreeNode({
               className="tree-loading"
               style={{ paddingLeft: 20 + depth * 12 }}
             >
-              yükleniyor…
+              loading…
             </div>
           )}
           {!loading &&
@@ -201,7 +201,7 @@ function TreeNode({
               className="tree-empty"
               style={{ paddingLeft: 20 + depth * 12 }}
             >
-              boş
+              empty
             </div>
           )}
         </div>
@@ -277,7 +277,7 @@ export function FileTree() {
   };
 
   const createNewFile = async (dir: string) => {
-    const name = window.prompt("Yeni dosya adı:");
+    const name = window.prompt("New file name:");
     if (!name?.trim()) return;
     const path = joinPath(dir, name.trim());
     try {
@@ -290,7 +290,7 @@ export function FileTree() {
   };
 
   const createNewFolder = async (dir: string) => {
-    const name = window.prompt("Yeni klasör adı:");
+    const name = window.prompt("New folder name:");
     if (!name?.trim()) return;
     try {
       await api.createDir(joinPath(dir, name.trim()));
@@ -301,7 +301,7 @@ export function FileTree() {
   };
 
   const renameEntry = async (entry: FileEntry) => {
-    const name = window.prompt("Yeni ad:", entry.name);
+    const name = window.prompt("New name:", entry.name);
     if (!name?.trim() || name.trim() === entry.name) return;
     const target = joinPath(dirName(entry.path), name.trim());
     try {
@@ -316,7 +316,7 @@ export function FileTree() {
 
   const deleteEntry = async (entry: FileEntry) => {
     const confirmed = window.confirm(
-      `"${entry.name}" silinsin mi? Bu işlem geri alınamaz.`
+      `Delete "${entry.name}"? This cannot be undone.`
     );
     if (!confirmed) return;
     try {
@@ -359,9 +359,9 @@ export function FileTree() {
   if (!workspace) {
     return (
       <div className="empty-panel">
-        <p>Henüz bir klasör açılmadı.</p>
+        <p>No folder opened yet.</p>
         <button className="primary-button" onClick={() => void openFolder()}>
-          Klasör Aç
+          Open Folder
         </button>
       </div>
     );
@@ -397,7 +397,7 @@ export function FileTree() {
         />
       ))}
       {entries.length === 0 && !error && (
-        <div className="tree-empty-root">Klasör boş.</div>
+        <div className="tree-empty-root">Folder is empty.</div>
       )}
       {contextMenu && (
         <div
@@ -413,7 +413,7 @@ export function FileTree() {
               void createNewFile(contextDir);
             }}
           >
-            <NewFileIcon size={14} /> <span>Yeni Dosya</span>
+            <NewFileIcon size={14} /> <span>New File</span>
           </button>
           <button
             className="menu-item"
@@ -422,7 +422,7 @@ export function FileTree() {
               void createNewFolder(contextDir);
             }}
           >
-            <NewFolderIcon size={14} /> <span>Yeni Klasör</span>
+            <NewFolderIcon size={14} /> <span>New Folder</span>
           </button>
           {contextMenu.entry && (
             <>
@@ -435,7 +435,7 @@ export function FileTree() {
                   if (entry) void renameEntry(entry);
                 }}
               >
-                <PencilIcon size={14} /> <span>Yeniden Adlandır</span>
+                <PencilIcon size={14} /> <span>Rename</span>
               </button>
               <button
                 className="menu-item danger"
@@ -445,7 +445,7 @@ export function FileTree() {
                   if (entry) void deleteEntry(entry);
                 }}
               >
-                <TrashIcon size={14} /> <span>Sil</span>
+                <TrashIcon size={14} /> <span>Delete</span>
               </button>
             </>
           )}

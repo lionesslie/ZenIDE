@@ -31,16 +31,16 @@ function statusClass(status: string): string {
 function statusLabel(status: string): string {
   switch (status) {
     case "M":
-      return "Değiştirildi";
+      return "Modified";
     case "A":
       return "Eklendi";
     case "D":
       return "Silindi";
     case "R":
-      return "Yeniden adlandırıldı";
+      return "Renamed";
     case "U":
     case "?":
-      return "İzlenmiyor";
+      return "Untracked";
     default:
       return status;
   }
@@ -58,7 +58,7 @@ export function GitPanel() {
   if (!workspace) {
     return (
       <div className="empty-panel">
-        <p>Kaynak kontrolü için bir klasör açın.</p>
+        <p>Open a folder for source control.</p>
       </div>
     );
   }
@@ -102,14 +102,14 @@ export function GitPanel() {
 
   const commit = async () => {
     if (!message.trim()) {
-      useStore.getState().toast("Commit mesajı boş olamaz.", "error");
+      useStore.getState().toast("Commit message cannot be empty.", "error");
       return;
     }
     setBusy(true);
     try {
       await api.gitCommit(workspace, message.trim());
       setMessage("");
-      useStore.getState().toast("Değişiklikler commit'lendi.", "success");
+      useStore.getState().toast("Changes committed.", "success");
       await refreshAll();
     } catch (error) {
       useStore.getState().toast(String(error), "error");
@@ -122,7 +122,7 @@ export function GitPanel() {
     setBusy(true);
     try {
       await api.gitPull(workspace);
-      useStore.getState().toast("Pull tamamlandı.", "success");
+      useStore.getState().toast("Pull completed.", "success");
       await refreshAll();
       useStore.getState().refreshTree();
     } catch (error) {
@@ -136,7 +136,7 @@ export function GitPanel() {
     setBusy(true);
     try {
       await api.gitPush(workspace);
-      useStore.getState().toast("Push tamamlandı.", "success");
+      useStore.getState().toast("Push completed.", "success");
       await refreshAll();
     } catch (error) {
       useStore.getState().toast(String(error), "error");
@@ -150,7 +150,7 @@ export function GitPanel() {
     setBusy(true);
     try {
       await api.gitCheckout(workspace, branch);
-      useStore.getState().toast(`Dal değiştirildi: ${branch}`, "success");
+      useStore.getState().toast(`Branch switched: ${branch}`, "success");
       await refreshAll();
       useStore.getState().refreshTree();
       await useStore.getState().refreshProject();
@@ -162,12 +162,12 @@ export function GitPanel() {
   };
 
   const createBranch = async () => {
-    const name = window.prompt("Yeni dal adı:");
+    const name = window.prompt("New branch name:");
     if (!name?.trim()) return;
     setBusy(true);
     try {
       await api.gitCreateBranch(workspace, name.trim());
-      useStore.getState().toast(`Dal oluşturuldu: ${name.trim()}`, "success");
+      useStore.getState().toast(`Branch created: ${name.trim()}`, "success");
       await refreshAll();
     } catch (error) {
       useStore.getState().toast(String(error), "error");
@@ -180,7 +180,7 @@ export function GitPanel() {
     setBusy(true);
     try {
       await api.gitInit(workspace);
-      useStore.getState().toast("Git deposu oluşturuldu.", "success");
+      useStore.getState().toast("Git repository initialized.", "success");
       await refreshAll();
     } catch (error) {
       useStore.getState().toast(String(error), "error");
@@ -193,9 +193,9 @@ export function GitPanel() {
     return (
       <div className="empty-panel">
         <ErrorIcon size={26} />
-        <p>{git?.error ?? "Bu klasör bir git deposu değil."}</p>
+        <p>{git?.error ?? "This folder is not a git repository."}</p>
         <button className="primary-button" disabled={busy} onClick={() => void initRepo()}>
-          Git Deposu Başlat
+          Initialize Repository
         </button>
         <button className="small-button" disabled={loading} onClick={() => void refreshAll()}>
           Yenile
@@ -213,7 +213,7 @@ export function GitPanel() {
           value={git.branch}
           disabled={busy}
           onChange={(event) => void checkout(event.target.value)}
-          title="Dal değiştir"
+          title="Switch branch"
         >
           {(branches.includes(git.branch) || !git.branch
             ? branches
@@ -243,12 +243,12 @@ export function GitPanel() {
           Push
         </button>
         <span className="git-sync-info">
-          {git.entries.length} değişiklik
+          {git.entries.length} changes
         </span>
       </div>
       <div className="git-changes">
         {git.entries.length === 0 && (
-          <div className="empty-panel small">Değişiklik yok.</div>
+          <div className="empty-panel small">No changes.</div>
         )}
         {git.entries.map((entry) => (
           <div
@@ -267,7 +267,7 @@ export function GitPanel() {
       </div>
       <div className="git-commit-box">
         <textarea
-          placeholder="Commit mesajı…"
+          placeholder="Commit message…"
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           rows={3}
@@ -277,12 +277,12 @@ export function GitPanel() {
           disabled={busy || !message.trim() || git.entries.length === 0}
           onClick={() => void commit()}
         >
-          Commit'le (tümü)
+          Commit (all)
         </button>
       </div>
       <div className="git-log">
-        <div className="section-title">GEÇMİŞ</div>
-        {log.length === 0 && <div className="empty-panel small">Commit geçmişi yok.</div>}
+        <div className="section-title">HISTORY</div>
+        {log.length === 0 && <div className="empty-panel small">No commit history.</div>}
         {log.map((commit) => (
           <div className="git-log-entry" key={commit.hash} title={commit.message}>
             <span className="git-log-hash">{commit.hash}</span>

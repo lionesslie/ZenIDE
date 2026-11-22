@@ -86,7 +86,7 @@ pub fn run_process(
 
     let mut child = cmd
         .spawn()
-        .map_err(|e| format!("'{program}' başlatılamadı: {e}"))?;
+        .map_err(|e| format!("'{program}' could not be started: {e}"))?;
 
     let stdout = child.stdout.take();
     let stderr = child.stderr.take();
@@ -169,7 +169,7 @@ pub fn kill_process(state: tauri::State<'_, ProcState>, id: u32) -> Result<(), S
             .lock()
             .unwrap()
             .kill()
-            .map_err(|e| format!("Süreç durdurulamadı: {e}"))?;
+            .map_err(|e| format!("Process could not be stopped: {e}"))?;
     }
     Ok(())
 }
@@ -188,7 +188,7 @@ pub async fn run_capture(
         cmd.stdin(Stdio::null());
         let output = cmd
             .output()
-            .map_err(|e| format!("'{program}' çalıştırılamadı: {e}"))?;
+            .map_err(|e| format!("'{program}' could not be run: {e}"))?;
         Ok(Capture {
             code: output.status.code(),
             stdout: String::from_utf8_lossy(&output.stdout).to_string(),

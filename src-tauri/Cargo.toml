@@ -1,7 +1,7 @@
 [package]
 name = "zenide"
 version = "0.1.0"
-description = "ZenIDE - a minimal cross-platform IDE for Rust, C++ and Python"
+description = "ZenIDE - a minimal cross-platform IDE"
 authors = ["ZenIDE"]
 edition = "2021"
 

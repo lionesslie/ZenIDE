@@ -24,7 +24,7 @@ export function DebugConsole() {
   return (
     <div className="debug-console">
       <pre className="debug-console-output" ref={outputRef}>
-        {output || "Hata ayıklama konsolu. Oturum başlatıldığında çıktı burada görünür."}
+        {output || "Debug console. Output appears when a session starts."}
       </pre>
       <form
         className="debug-console-input"
@@ -38,16 +38,16 @@ export function DebugConsole() {
           placeholder={
             debugActive
               ? debugPaused
-                ? "İfade değerlendir…"
-                : "Program çalışıyor…"
-              : "Hata ayıklama oturumu yok"
+                ? "Evaluate expression…"
+                : "Program running…"
+              : "No debug session"
           }
           value={input}
           disabled={!debugActive}
           onChange={(event) => setInput(event.target.value)}
         />
         <button className="small-button" type="submit" disabled={!debugActive || !input.trim()}>
-          Gönder
+          Send
         </button>
       </form>
     </div>

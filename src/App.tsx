@@ -35,7 +35,7 @@ export default function App() {
   useEffect(() => {
     registerExtraLanguages();
     registerLspProviders();
-    initDebugService();
+    void initDebugService();
     void lspManager.init();
     void initTaskService();
     void useStore.getState().bootstrap();
@@ -134,6 +134,16 @@ export default function App() {
   useEffect(() => {
     document.title = workspace ? `ZenIDE — ${baseName(workspace)}` : "ZenIDE";
   }, [workspace]);
+
+  useEffect(() => {
+    const handler = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(".context-menu")) return;
+      event.preventDefault();
+    };
+    window.addEventListener("contextmenu", handler);
+    return () => window.removeEventListener("contextmenu", handler);
+  }, []);
 
   return (
     <div className="app">

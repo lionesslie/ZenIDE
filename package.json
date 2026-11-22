@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "ZenIDE - minimal, cross-platform IDE for Rust, C++ and Python",
+  "description": "ZenIDE - minimal, cross-platform IDE",
   "scripts": {
     "dev": "vite --port 1420 --strictPort",
     "build": "vite build",

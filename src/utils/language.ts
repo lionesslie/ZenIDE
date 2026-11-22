@@ -89,7 +89,7 @@ export function languageLabel(language: string): string {
     powershell: "PowerShell",
     bat: "Batch",
     cmake: "CMake",
-    plaintext: "Düz Metin",
+    plaintext: "Plain Text",
     dockerfile: "Dockerfile",
     sql: "SQL",
     java: "Java",

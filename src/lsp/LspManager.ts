@@ -148,7 +148,7 @@ class LspManager {
       if (!this.stopping) {
         this.failed.add(key);
         state.setLspStatus(language, "error");
-        state.toast(`Dil sunucusu başlatılamadı (${language}): ${error}`, "error");
+        state.toast(`Language server could not be started (${language}): ${error}`, "error");
       }
       return null;
     }
@@ -247,7 +247,7 @@ class LspManager {
     } catch (error) {
       if (epoch === this.epoch && !this.stopping) {
         state.setLspStatus(language, "error");
-        state.toast(`LSP başlatılamadı (${language}): ${error}`, "error");
+        state.toast(`LSP could not be started (${language}): ${error}`, "error");
       }
       await client.stop();
       this.bySession.delete(client.session);
@@ -270,7 +270,7 @@ class LspManager {
     if (method === "client/unregisterCapability") return null;
     if (method === "window/workDoneProgress/create") return null;
     if (method === "workspace/applyEdit") {
-      return { applied: false, failureReason: "ZenIDE sunucu düzenlemelerini uygulamaz." };
+      return { applied: false, failureReason: "ZenIDE does not apply server-side edits." };
     }
     if (method === "window/showMessageRequest") return null;
     return null;
@@ -354,7 +354,7 @@ class LspManager {
     useStore.getState().setLspStatus(client.languageId, "error");
     useStore
       .getState()
-      .toast(`Dil sunucusu kapandı: ${client.languageId}`, "error");
+      .toast(`Language server closed: ${client.languageId}`, "error");
   }
 
   async openFile(path: string, language: string): Promise<void> {
@@ -446,7 +446,7 @@ class LspManager {
     try {
       return await client.request(method, params);
     } catch (error) {
-      console.debug(`LSP isteği başarısız (${method})`, error);
+      console.debug(`LSP request failed (${method})`, error);
       return null;
     }
   }

@@ -43,7 +43,7 @@ export function DebugPanel() {
   if (!workspace) {
     return (
       <div className="empty-panel">
-        <p>Hata ayıklamak için bir proje açın.</p>
+        <p>Open a project to debug.</p>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export function DebugPanel() {
       <div className="debug-toolbar">
         <button
           className="icon-button"
-          title="Hata ayıklamayı başlat"
+          title="Start debugging"
           disabled={debugActive}
           onClick={() => void startDebugging()}
         >
@@ -85,7 +85,7 @@ export function DebugPanel() {
         </button>
         <button
           className="icon-button"
-          title="Adım atla (over)"
+          title="Step over"
           disabled={!debugActive || !debugPaused}
           onClick={() => void debugStep("next")}
         >
@@ -93,7 +93,7 @@ export function DebugPanel() {
         </button>
         <button
           className="icon-button"
-          title="İçine gir (into)"
+          title="Step into"
           disabled={!debugActive || !debugPaused}
           onClick={() => void debugStep("stepIn")}
         >
@@ -101,7 +101,7 @@ export function DebugPanel() {
         </button>
         <button
           className="icon-button"
-          title="Dışına çık (out)"
+          title="Step out"
           disabled={!debugActive || !debugPaused}
           onClick={() => void debugStep("stepOut")}
         >
@@ -111,26 +111,26 @@ export function DebugPanel() {
       <div className={`debug-state ${debugActive ? (debugPaused ? "paused" : "running") : ""}`}>
         {debugActive
           ? debugPaused
-            ? "Duraklatıldı"
-            : "Çalışıyor…"
-          : "Hazır"}
+            ? "Paused"
+            : "Running…"
+          : "Ready"}
         {project && <span className="debug-project"> · {project.kind}</span>}
       </div>
       {!debugActive && (
         <div className="debug-hint">
           {project?.kind === "rust" || project?.kind === "cpp"
-            ? "lldb-dap kullanılır. Yol ayarlardan yapılandırılabilir."
+            ? "Uses lldb-dap. Path configurable in settings."
             : project?.kind === "python"
-              ? "debugpy kullanılır (python -m debugpy.adapter)."
-              : "Proje türü algılanamadı."}
+              ? "Uses debugpy (python -m debugpy.adapter)."
+              : "Project type not detected."}
         </div>
       )}
 
-      <div className="section-title">KESME NOKTALARI</div>
+      <div className="section-title">BREAKPOINTS</div>
       <div className="breakpoint-list">
         {grouped.length === 0 && (
           <div className="empty-panel small">
-            Editörde satır numarasına tıklayarak kesme noktası ekleyin.
+            Click line numbers in the editor to add breakpoints.
           </div>
         )}
         {grouped.map(([path, lines]) => (
@@ -143,14 +143,14 @@ export function DebugPanel() {
                 <button
                   className="breakpoint-open"
                   onClick={() => void useStore.getState().openFile(path, line, 1)}
-                  title="Satıra git"
+                  title="Go to line"
                 >
                   <BreakpointIcon size={10} />
-                  <span>Satır {line}</span>
+                  <span>Line {line}</span>
                 </button>
                 <button
                   className="icon-button small"
-                  title="Kesme noktasını kaldır"
+                  title="Remove breakpoint"
                   onClick={() => useStore.getState().removeBreakpoint(path, line)}
                 >
                   <CloseIcon size={12} />
@@ -164,12 +164,12 @@ export function DebugPanel() {
             className="small-button"
             onClick={() => useStore.getState().clearBreakpoints()}
           >
-            <TrashIcon size={12} /> Tümünü temizle
+            <TrashIcon size={12} /> Clear all
           </button>
         )}
       </div>
 
-      <div className="section-title">İZLENENLER</div>
+      <div className="section-title">WATCH</div>
       <form
         className="watch-form"
         onSubmit={(event) => {
@@ -178,7 +178,7 @@ export function DebugPanel() {
         }}
       >
         <input
-          placeholder="İfade ekle…"
+          placeholder="Add expression…"
           value={watchInput}
           onChange={(event) => setWatchInput(event.target.value)}
         />
@@ -197,14 +197,14 @@ export function DebugPanel() {
             </span>
             <button
               className="icon-button small"
-              title="Yeniden değerlendir"
+              title="Re-evaluate"
               onClick={() => void evaluateWatch(index, watch.expression)}
             >
               <RefreshIcon size={12} />
             </button>
             <button
               className="icon-button small"
-              title="Kaldır"
+              title="Remove"
               onClick={() => useStore.getState().removeWatch(index)}
             >
               <CloseIcon size={12} />
@@ -212,7 +212,7 @@ export function DebugPanel() {
           </div>
         ))}
         {watches.length === 0 && (
-          <div className="empty-panel small">Henüz izlenen ifade yok.</div>
+          <div className="empty-panel small">No watch expressions.</div>
         )}
       </div>
     </div>

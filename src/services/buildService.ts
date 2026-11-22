@@ -19,7 +19,7 @@ function resolveProgram(root: string, program: string): string {
 export async function buildProject(): Promise<void> {
   const { workspace, project, config } = useStore.getState();
   if (!workspace) {
-    useStore.getState().toast("Önce bir proje açın.", "error");
+    useStore.getState().toast("Open a project first.", "error");
     return;
   }
   const kind = project?.kind ?? "unknown";
@@ -82,7 +82,7 @@ export async function buildProject(): Promise<void> {
   useStore
     .getState()
     .toast(
-      "Proje türü algılanamadı (Cargo.toml, CMakeLists.txt veya Python dosyası gerekli).",
+      "Project type could not be detected (Cargo.toml, CMakeLists.txt or a Python file is required).",
       "error"
     );
 }
@@ -91,7 +91,7 @@ export async function runProject(): Promise<void> {
   const state = useStore.getState();
   const { workspace, project, config } = state;
   if (!workspace) {
-    state.toast("Önce bir proje açın.", "error");
+    state.toast("Open a project first.", "error");
     return;
   }
   const kind = project?.kind ?? "unknown";
@@ -115,14 +115,14 @@ export async function runProject(): Promise<void> {
       useStore
         .getState()
         .toast(
-          "Çalıştırılabilir dosya bulunamadı. CMake hedefini kontrol edin.",
+          "Executable not found. Check the CMake target.",
           "error"
         );
       return;
     }
     const executable = resolveProgram(workspace, program);
     await runTask(
-      `Çalıştır: ${baseName(executable)}`,
+      `Run: ${baseName(executable)}`,
       executable,
       [],
       workspace
@@ -146,7 +146,7 @@ export async function runProject(): Promise<void> {
     return;
   }
 
-  state.toast("Proje türü algılanamadı.", "error");
+  state.toast("Project type could not be detected.", "error");
 }
 
 export async function runTests(): Promise<void> {

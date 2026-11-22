@@ -18,9 +18,9 @@ export function OutputPanel() {
   if (tasks.length === 0) {
     return (
       <div className="empty-panel">
-        <p>Henüz görev çıktısı yok.</p>
+        <p>No task output yet.</p>
         <p className="welcome-muted">
-          Derle, çalıştır veya test et komutlarıyla bir görev başlatın.
+          Start a task using Build, Run or Test commands.
         </p>
       </div>
     );
@@ -58,7 +58,7 @@ export function OutputPanel() {
           {activeTask?.running && (
             <button
               className="icon-button small"
-              title="Görevi durdur"
+              title="Stop task"
               onClick={() => void killTask(activeTask.id)}
             >
               <StopIcon size={13} />
@@ -66,7 +66,7 @@ export function OutputPanel() {
           )}
           <button
             className="icon-button small"
-            title="Görevleri temizle"
+            title="Clear tasks"
             onClick={() => useStore.getState().clearTasks()}
           >
             <TrashIcon size={13} />
@@ -77,7 +77,7 @@ export function OutputPanel() {
         {activeTask?.output ?? ""}
         {activeTask && !activeTask.running && (
           <span className="output-exit">
-            {`\n[Görev ${activeTask.code === 0 ? "başarıyla" : "hatayla"} sona erdi (kod ${activeTask.code ?? "?"})]`}
+            {`\n[Task ${activeTask.code === 0 ? "completed" : "failed"} (exit code ${activeTask.code ?? "?"})]`}
           </span>
         )}
       </pre>

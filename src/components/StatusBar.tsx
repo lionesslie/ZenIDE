@@ -51,7 +51,7 @@ export function StatusBar() {
         {git?.is_repo && (
           <button
             className="status-item status-button"
-            title="Kaynak kontrolünü aç"
+            title="Open source control"
             onClick={() => useStore.getState().setSidebarView("git")}
           >
             <GitBranchIcon size={12} />
@@ -67,16 +67,16 @@ export function StatusBar() {
             <span
               key={language.id}
               className={`status-item lsp-status lsp-${status}`}
-              title={`${language.label} dil sunucusu: ${status}`}
+              title={`${language.label} language server: ${status === "off" ? "none" : status}`}
             >
               <span className={`lsp-dot ${status}`} />
-              {language.label}
+              {status === "off" ? "none" : language.label}
             </span>
           );
         })}
         {debugActive && (
           <span className={`status-item debug-status ${debugPaused ? "paused" : "running"}`}>
-            {debugPaused ? "Duraklatıldı" : "Hata ayıklanıyor"}
+            {debugPaused ? "Paused" : "Debugging"}
           </span>
         )}
       </div>
@@ -84,7 +84,7 @@ export function StatusBar() {
         {activeFile && (
           <>
             <span className="status-item">
-              Sat {cursor.line}, Kol {cursor.column}
+              Ln {cursor.line}, Col {cursor.column}
             </span>
             <span className="status-item">{eol}</span>
             <span className="status-item">UTF-8</span>
@@ -94,7 +94,7 @@ export function StatusBar() {
         {vimMode && <span className="status-item vim-indicator">VIM</span>}
         <button
           className="status-item status-button"
-          title="Sorunlar"
+          title="Problems"
           onClick={() => useStore.getState().toggleBottom("problems")}
         >
           <ErrorIcon size={12} /> {errors}
@@ -102,14 +102,14 @@ export function StatusBar() {
         </button>
         <button
           className={`status-item status-button ${bottomVisible ? "active" : ""}`}
-          title="Terminali aç/kapat"
+          title="Toggle terminal"
           onClick={() => useStore.getState().toggleBottom("terminal")}
         >
           <TerminalIcon size={12} />
         </button>
         <button
           className="status-item status-button"
-          title="Ayarlar"
+          title="Settings"
           onClick={() => useStore.getState().setSettingsOpen(true)}
         >
           <SettingsIcon size={12} />

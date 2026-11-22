@@ -46,12 +46,12 @@ pub struct ThemeConfig {
 impl Default for ThemeConfig {
     fn default() -> Self {
         Self {
-            background: "#1e1f22".into(),
-            panel: "#2b2d30".into(),
-            border: "#393b40".into(),
-            text: "#bcbec4".into(),
-            accent: "#4a88ff".into(),
-            editor_background: "#1e1f22".into(),
+            background: "#0b0b0c".into(),
+            panel: "#151517".into(),
+            border: "#27272b".into(),
+            text: "#f0f0f2".into(),
+            accent: "#d9d9de".into(),
+            editor_background: "#08080a".into(),
         }
     }
 }
@@ -267,27 +267,27 @@ pub struct ConfigState {
 }
 
 fn read_config(path: &PathBuf) -> Result<ZenConfig, String> {
-    let raw = fs::read_to_string(path).map_err(|e| format!("Config okunamadı: {e}"))?;
+    let raw = fs::read_to_string(path).map_err(|e| format!("Config could not be read: {e}"))?;
     let mut config: ZenConfig =
-        toml::from_str(&raw).map_err(|e| format!("Config ayrıştırılamadı: {e}"))?;
+        toml::from_str(&raw).map_err(|e| format!("Config could not be parsed: {e}"))?;
     config.normalize();
     Ok(config)
 }
 
 fn write_config(path: &PathBuf, config: &ZenConfig) -> Result<(), String> {
-    let body = toml::to_string_pretty(config).map_err(|e| format!("Config serileştirilemedi: {e}"))?;
-    let header = "# ZenIDE yapılandırması\n\
-                  # Bu dosya IDE tarafından izlenir; kaydettiğinizde ayarlar yeniden başlatmadan uygulanır.\n\
-                  # Renkler, font, vim modu, kısayollar, LSP yolları ve terminal buradan yönetilir.\n\n";
-    fs::write(path, format!("{header}{body}")).map_err(|e| format!("Config yazılamadı: {e}"))
+    let body = toml::to_string_pretty(config).map_err(|e| format!("Config could not be serialized: {e}"))?;
+    let header = "# ZenIDE configuration\n\
+                  # This file is watched by the IDE; settings apply without restart when saved.\n\
+                  # Colors, font, vim mode, keybindings, LSP paths and terminal are managed here.\n\n";
+    fs::write(path, format!("{header}{body}")).map_err(|e| format!("Config could not be written: {e}"))
 }
 
 pub fn init(app: &AppHandle) -> Result<(), String> {
     let dir = app
         .path()
         .app_config_dir()
-        .map_err(|e| format!("Config klasörü bulunamadı: {e}"))?;
-    fs::create_dir_all(&dir).map_err(|e| format!("Config klasörü oluşturulamadı: {e}"))?;
+        .map_err(|e| format!("Config folder not found: {e}"))?;
+    fs::create_dir_all(&dir).map_err(|e| format!("Config folder could not be created: {e}"))?;
     let path = dir.join("zenide.config.toml");
 
     let mut config = if path.exists() {
@@ -337,7 +337,7 @@ pub fn init(app: &AppHandle) -> Result<(), String> {
             }
         },
     )
-    .map_err(|e| format!("Config izleyicisi oluşturulamadı: {e}"))?;
+    .map_err(|e| format!("Config watcher could not be created: {e}"))?;
 
     watcher
         .watch(&dir, RecursiveMode::NonRecursive)

@@ -10,10 +10,10 @@ import {
 } from "./Icons";
 
 const views: { id: SidebarView; label: string; icon: JSX.Element }[] = [
-  { id: "explorer", label: "Gezgin", icon: <FilesIcon size={19} /> },
-  { id: "search", label: "Ara", icon: <SearchIcon size={19} /> },
-  { id: "git", label: "Kaynak Kontrolü", icon: <GitBranchIcon size={19} /> },
-  { id: "debug", label: "Hata Ayıklama", icon: <BugIcon size={19} /> },
+  { id: "explorer", label: "Explorer", icon: <FilesIcon size={19} /> },
+  { id: "search", label: "Search", icon: <SearchIcon size={19} /> },
+  { id: "git", label: "Source Control", icon: <GitBranchIcon size={19} /> },
+  { id: "debug", label: "Debug", icon: <BugIcon size={19} /> },
   { id: "python", label: "Python", icon: <PythonIcon size={19} /> },
 ];
 
@@ -50,7 +50,7 @@ export function ActivityBar() {
       <div className="activity-bottom">
         <button
           className="activity-button"
-          title="Ayarlar"
+          title="Settings"
           onClick={() => useStore.getState().setSettingsOpen(true)}
         >
           <SettingsIcon size={19} />

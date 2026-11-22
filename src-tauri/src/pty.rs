@@ -66,7 +66,7 @@ pub fn pty_spawn(
             pixel_width: 0,
             pixel_height: 0,
         })
-        .map_err(|e| format!("PTY açılamadı: {e}"))?;
+        .map_err(|e| format!("PTY could not be opened: {e}"))?;
 
     let shell_command = shell
         .filter(|value| !value.trim().is_empty())
@@ -84,17 +84,17 @@ pub fn pty_spawn(
     let child = pair
         .slave
         .spawn_command(cmd)
-        .map_err(|e| format!("Terminal başlatılamadı: {e}"))?;
+        .map_err(|e| format!("Terminal could not be started: {e}"))?;
     drop(pair.slave);
 
     let mut reader = pair
         .master
         .try_clone_reader()
-        .map_err(|e| format!("Terminal çıktısı okunamadı: {e}"))?;
+        .map_err(|e| format!("Terminal output could not be read: {e}"))?;
     let writer = pair
         .master
         .take_writer()
-        .map_err(|e| format!("Terminal girişi alınamadı: {e}"))?;
+        .map_err(|e| format!("Terminal input could not be read: {e}"))?;
 
     let app_output = app.clone();
     thread::spawn(move || {
@@ -134,12 +134,12 @@ pub fn pty_write(
     let mut sessions = state.sessions.lock().unwrap();
     let session = sessions
         .get_mut(&id)
-        .ok_or_else(|| "Terminal oturumu bulunamadı.".to_string())?;
+        .ok_or_else(|| "Terminal session not found.".to_string())?;
     session
         .writer
         .write_all(data.as_bytes())
         .and_then(|_| session.writer.flush())
-        .map_err(|e| format!("Terminale yazılamadı: {e}"))
+        .map_err(|e| format!("Could not write to terminal: {e}"))
 }
 
 #[tauri::command]
@@ -152,7 +152,7 @@ pub fn pty_resize(
     let sessions = state.sessions.lock().unwrap();
     let session = sessions
         .get(&id)
-        .ok_or_else(|| "Terminal oturumu bulunamadı.".to_string())?;
+        .ok_or_else(|| "Terminal session not found.".to_string())?;
     session
         .master
         .resize(PtySize {
@@ -161,7 +161,7 @@ pub fn pty_resize(
             pixel_width: 0,
             pixel_height: 0,
         })
-        .map_err(|e| format!("Terminal boyutlandırılamadı: {e}"))
+        .map_err(|e| format!("Terminal could not be resized: {e}"))
 }
 
 #[tauri::command]

@@ -107,8 +107,8 @@ export function QuickOpen() {
           className="quick-open-input"
           placeholder={
             workspace
-              ? "Dosya adı yazın… (Esc kapat)"
-              : "Önce bir klasör açın."
+              ? "Type a file name… (Esc to close)"
+              : "Open a folder first."
           }
           value={query}
           disabled={!workspace}
@@ -116,9 +116,9 @@ export function QuickOpen() {
           onKeyDown={handleKeyDown}
         />
         <div className="quick-open-results" ref={listRef}>
-          {loading && <div className="quick-open-hint">Aranıyor…</div>}
+          {loading && <div className="quick-open-hint">Searching…</div>}
           {!loading && workspace && results.length === 0 && (
-            <div className="quick-open-hint">Sonuç bulunamadı.</div>
+            <div className="quick-open-hint">No results found.</div>
           )}
           {!loading &&
             results.map((path, index) => (

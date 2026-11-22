@@ -5,7 +5,6 @@
   "identifier": "com.zenide.ide",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
@@ -20,6 +19,7 @@
         "center": true,
         "resizable": true,
         "fullscreen": false,
+        "decorations": false,
         "theme": "Dark"
       }
     ],
@@ -38,7 +38,7 @@
       "icons/icon.ico"
     ],
     "category": "DeveloperTool",
-    "shortDescription": "Minimal IDE for Rust, C++ and Python",
-    "longDescription": "ZenIDE is a minimal, cross-platform IDE with LSP, DAP debugging, an integrated terminal, git and configurable keybindings for Rust, C++ and Python."
+    "shortDescription": "Minimal cross-platform IDE",
+    "longDescription": "ZenIDE is a minimal, cross-platform IDE with LSP, DAP debugging, an integrated terminal, git and configurable keybindings."
   }
 }

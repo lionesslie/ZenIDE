@@ -1,15 +1,16 @@
 import { useStore } from "../store";
 import { openFolder } from "../actions";
 import { baseName } from "../utils/path";
+import iconUrl from "../assets/icon.png";
 import { CommandIcon, FolderIcon, PlusIcon, SettingsIcon } from "./Icons";
 
 const shortcuts: { keys: string; label: string }[] = [
-  { keys: "Ctrl+P", label: "Hızlı dosya aç" },
-  { keys: "Ctrl+S", label: "Kaydet" },
-  { keys: "Ctrl+Shift+F", label: "Projede ara" },
+  { keys: "Ctrl+P", label: "Quick open file" },
+  { keys: "Ctrl+S", label: "Save" },
+  { keys: "Ctrl+Shift+F", label: "Search in project" },
   { keys: "Ctrl+`", label: "Terminal" },
-  { keys: "Ctrl+Shift+B", label: "Derle" },
-  { keys: "F5", label: "Hata ayıkla" },
+  { keys: "Ctrl+Shift+B", label: "Build" },
+  { keys: "F5", label: "Debug" },
 ];
 
 export function Welcome() {
@@ -21,50 +22,50 @@ export function Welcome() {
     <div className="welcome">
       <div className="welcome-inner">
         <div className="welcome-brand">
-          <span className="welcome-logo">Z</span>
+          <img src={iconUrl} alt="ZenIDE" className="welcome-logo" />
           <div>
             <h1>ZenIDE</h1>
-            <p>Rust, C++ ve Python için minimal masaüstü IDE</p>
+            <p>A minimal, cross-platform desktop IDE</p>
           </div>
         </div>
         {workspace ? (
           <div className="welcome-section">
             <h2>{project?.name || baseName(workspace)}</h2>
             <p className="welcome-muted">
-              Bir dosya açmak için gezgini kullanın veya hızlı aç ile arayın.
+              Use the explorer to open a file or search with quick open.
             </p>
             <button
               className="primary-button"
               onClick={() => useStore.getState().setQuickOpenOpen(true)}
             >
-              <CommandIcon size={14} /> Hızlı Aç (Ctrl+P)
+              <CommandIcon size={14} /> Quick Open (Ctrl+P)
             </button>
           </div>
         ) : (
           <div className="welcome-section">
-            <h2>Başlayın</h2>
+            <h2>Get Started</h2>
             <div className="welcome-actions">
               <button className="primary-button" onClick={() => void openFolder()}>
-                <FolderIcon size={14} /> Klasör Aç
+                <FolderIcon size={14} /> Open Folder
               </button>
               <button
                 className="secondary-button"
                 onClick={() => useStore.getState().setNewProjectOpen(true)}
               >
-                <PlusIcon size={14} /> Yeni Proje
+                <PlusIcon size={14} /> New Project
               </button>
               <button
                 className="secondary-button"
                 onClick={() => useStore.getState().setSettingsOpen(true)}
               >
-                <SettingsIcon size={14} /> Ayarlar
+                <SettingsIcon size={14} /> Settings
               </button>
             </div>
           </div>
         )}
         {recent.length > 0 && (
           <div className="welcome-section">
-            <h3>Son Açılanlar</h3>
+            <h3>Recent</h3>
             <div className="recent-list">
               {recent.map((path) => (
                 <button
@@ -82,7 +83,7 @@ export function Welcome() {
           </div>
         )}
         <div className="welcome-section">
-          <h3>Kısayollar</h3>
+          <h3>Shortcuts</h3>
           <div className="shortcut-grid">
             {shortcuts.map((shortcut) => (
               <div className="shortcut-row" key={shortcut.keys}>

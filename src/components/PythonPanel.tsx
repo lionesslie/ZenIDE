@@ -41,7 +41,7 @@ export function PythonPanel() {
   if (!workspace) {
     return (
       <div className="empty-panel">
-        <p>Python araçları için bir proje açın.</p>
+        <p>Open a project for Python tools.</p>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export function PythonPanel() {
       <div className="python-info">
         <div className="python-info-row">
           <GlobeIcon size={14} />
-          <span className="python-label">Yorumlayıcı</span>
+          <span className="python-label">Interpreter</span>
           <span className="python-value" title={python}>
             {python}
           </span>
@@ -69,7 +69,7 @@ export function PythonPanel() {
           <PackageIcon size={14} />
           <span className="python-label">Proje</span>
           <span className="python-value">
-            {project?.kind === "python" ? project.name : "Python projesi değil"}
+            {project?.kind === "python" ? project.name : "Not a Python project"}
           </span>
         </div>
         {project?.venv && (
@@ -94,7 +94,7 @@ export function PythonPanel() {
           disabled={loading || project?.kind !== "python"}
           onClick={() => void createProjectVenv()}
         >
-          Sanal Ortam Oluştur
+          Create Virtual Env
         </button>
       </div>
       <form
@@ -105,7 +105,7 @@ export function PythonPanel() {
         }}
       >
         <input
-          placeholder="Paket adı (ör. requests)"
+          placeholder="Package name (e.g. requests)"
           value={packageName}
           onChange={(event) => setPackageName(event.target.value)}
         />
@@ -126,10 +126,10 @@ export function PythonPanel() {
         />
       </div>
       <div className="package-list">
-        {loading && <div className="empty-panel small">Yükleniyor…</div>}
+        {loading && <div className="empty-panel small">Loading…</div>}
         {!loading && filtered.length === 0 && (
           <div className="empty-panel small">
-            {packages.length === 0 ? "Paket bulunamadı." : "Eşleşen paket yok."}
+            {packages.length === 0 ? "No packages found." : "No matching packages."}
           </div>
         )}
         {!loading &&
@@ -139,7 +139,7 @@ export function PythonPanel() {
               <span className="package-version">{item.version}</span>
               <button
                 className="icon-button small"
-                title="Kaldır"
+                title="Remove"
                 disabled={loading}
                 onClick={() => void uninstallPythonPackage(item.name)}
               >

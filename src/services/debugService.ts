@@ -41,7 +41,7 @@ export function initDebugService(): Promise<void> {
       lastBreakpointPaths.clear();
       client.failPending();
       useStore.getState().resetDebug();
-      useStore.getState().toast("Hata ayıklama oturumu sona erdi.", "info");
+      useStore.getState().toast("Debug session ended.", "info");
     });
   })();
   return initPromise;
@@ -119,7 +119,7 @@ async function loadScopes(frameId: number): Promise<void> {
     }
     useStore.getState().setDebugScopes(scopes);
   } catch (error) {
-    console.debug("Kapsamlar alınamadı", error);
+    console.debug("Could not get scopes", error);
   }
 }
 
@@ -158,7 +158,7 @@ async function refreshStopped(threadId?: number): Promise<void> {
       await loadScopes(first.id);
     }
   } catch (error) {
-    console.debug("Duraklama bilgisi alınamadı", error);
+    console.debug("Could not get pause info", error);
   }
 }
 
@@ -191,7 +191,7 @@ async function handleEvent(event: string, body: any): Promise<void> {
       // ignore
     }
     useStore.getState().resetDebug();
-    useStore.getState().toast("Hata ayıklama oturumu sona erdi.", "info");
+    useStore.getState().toast("Debug session ended.", "info");
   }
 }
 
@@ -199,7 +199,7 @@ export async function startDebugging(): Promise<void> {
   await initDebugService();
   const state = useStore.getState();
   if (!state.workspace) {
-    state.toast("Hata ayıklamak için önce bir proje açın.", "error");
+    state.toast("Open a project first to debug.", "error");
     return;
   }
   if (dap) {
@@ -215,7 +215,7 @@ export async function startDebugging(): Promise<void> {
     }
   }
   if (!project) {
-    state.toast("Proje algılanamadı.", "error");
+    state.toast("Project could not be detected.", "error");
     return;
   }
 
@@ -232,7 +232,7 @@ export async function startDebugging(): Promise<void> {
     let program = configured || project.executable || "";
     if (!program) {
       state.toast(
-        "Çalıştırılabilir dosya bulunamadı. Önce projeyi derleyin.",
+        "Executable not found. Build the project first.",
         "error"
       );
       return;
@@ -269,7 +269,7 @@ export async function startDebugging(): Promise<void> {
       subProcess: true,
     };
   } else {
-    state.toast("Bu proje türü için hata ayıklama desteklenmiyor.", "error");
+    state.toast("Debugging is not supported for this project type.", "error");
     return;
   }
 
@@ -319,15 +319,15 @@ export async function startDebugging(): Promise<void> {
     void client.request("launch", launchArgs, 90_000).catch((error) => {
       useStore
         .getState()
-        .toast(`Hata ayıklama başlatılamadı: ${error.message}`, "error");
+        .toast(`Could not start debugging: ${error.message}`, "error");
       void stopDebugging();
     });
     await client.request("configurationDone", {}, 30_000).catch(() => null);
-    useStore.getState().toast("Hata ayıklama oturumu başlatıldı.", "info");
+    useStore.getState().toast("Debug session started.", "info");
   } catch (error) {
     useStore
       .getState()
-      .toast(`DAP başlatma hatası: ${(error as Error).message}`, "error");
+      .toast(`DAP startup error: ${(error as Error).message}`, "error");
     await stopDebugging();
   }
 }

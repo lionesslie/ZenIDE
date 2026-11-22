@@ -124,7 +124,7 @@ function DiffDialog({ diff }: { diff: DiffData }) {
               {workspace ? relativePath(workspace, diff.path) : diff.path}
             </span>
             <span className={`diff-badge ${diff.staged ? "staged" : ""}`}>
-              {diff.staged ? "Sahnelendi" : "Çalışma ağacı"}
+              {diff.staged ? "Staged" : "Working tree"}
             </span>
           </div>
           <div className="diff-stats">
@@ -153,7 +153,7 @@ function DiffDialog({ diff }: { diff: DiffData }) {
         </div>
         <div className="diff-footer">
           <span className="welcome-muted">
-            HEAD ile çalışma ağacı karşılaştırması
+            Compare HEAD with working tree
           </span>
         </div>
       </div>

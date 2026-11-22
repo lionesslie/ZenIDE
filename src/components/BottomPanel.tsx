@@ -43,13 +43,13 @@ export function BottomPanel() {
 
   const tabs: { id: BottomTab; label: string; badge?: number }[] = [
     { id: "terminal", label: "Terminal" },
-    { id: "output", label: "Çıktı" },
+    { id: "output", label: "Output" },
     {
       id: "problems",
-      label: "Sorunlar",
+      label: "Problems",
       badge: errorCount + warningCount,
     },
-    { id: "debug", label: "Hata Ayıklama Konsolu" },
+    { id: "debug", label: "Debug Console" },
   ];
 
   return (

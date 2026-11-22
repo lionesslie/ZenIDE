@@ -9,17 +9,17 @@ const kinds: { id: Kind; label: string; description: string }[] = [
   {
     id: "rust",
     label: "Rust",
-    description: "Cargo.toml ve src/main.rs ile yeni bir ikili uygulama.",
+    description: "A new binary application with Cargo.toml and src/main.rs.",
   },
   {
     id: "cpp",
     label: "C++",
-    description: "CMakeLists.txt ve src/main.cpp ile CMake projesi.",
+    description: "A CMake project with CMakeLists.txt and src/main.cpp.",
   },
   {
     id: "python",
     label: "Python",
-    description: "main.py, requirements.txt ve isteğe bağlı .venv.",
+    description: "main.py, requirements.txt and an optional .venv.",
   },
 ];
 
@@ -52,11 +52,11 @@ export function NewProjectModal() {
   const create = async () => {
     const trimmed = name.trim();
     if (!trimmed) {
-      useStore.getState().toast("Proje adı gerekli.", "error");
+      useStore.getState().toast("Project name is required.", "error");
       return;
     }
     if (!parent.trim()) {
-      useStore.getState().toast("Üst klasör gerekli.", "error");
+      useStore.getState().toast("Parent folder is required.", "error");
       return;
     }
     setBusy(true);
@@ -68,7 +68,7 @@ export function NewProjectModal() {
         kind === "python" ? pythonPath.trim() || null : null
       );
       useStore.getState().setNewProjectOpen(false);
-      useStore.getState().toast(`Proje oluşturuldu: ${trimmed}`, "success");
+      useStore.getState().toast(`Project created: ${trimmed}`, "success");
       await useStore.getState().setWorkspace(path);
     } catch (error) {
       useStore.getState().toast(String(error), "error");
@@ -88,10 +88,10 @@ export function NewProjectModal() {
     >
       <div className="new-project-modal">
         <div className="modal-header">
-          <h2>Yeni Proje</h2>
+          <h2>New Project</h2>
           <button
             className="icon-button small"
-            title="Kapat"
+            title="Close"
             onClick={() => useStore.getState().setNewProjectOpen(false)}
           >
             <CloseIcon size={14} />
@@ -111,7 +111,7 @@ export function NewProjectModal() {
             ))}
           </div>
           <div className="form-row">
-            <label className="form-label">Proje adı</label>
+            <label className="form-label">Project name</label>
             <input
               className="form-input"
               autoFocus
@@ -124,7 +124,7 @@ export function NewProjectModal() {
             />
           </div>
           <div className="form-row">
-            <label className="form-label">Üst klasör</label>
+            <label className="form-label">Parent folder</label>
             <div className="input-with-button">
               <input
                 className="form-input"
@@ -136,13 +136,13 @@ export function NewProjectModal() {
                 type="button"
                 onClick={() => void browse()}
               >
-                <FolderIcon size={13} /> Gözat
+                <FolderIcon size={13} /> Browse
               </button>
             </div>
           </div>
           {kind === "python" && (
             <div className="form-row">
-              <label className="form-label">Python yorumlayıcısı (isteğe bağlı)</label>
+              <label className="form-label">Python interpreter (optional)</label>
               <input
                 className="form-input"
                 placeholder="python"
@@ -150,8 +150,8 @@ export function NewProjectModal() {
                 onChange={(event) => setPythonPath(event.target.value)}
               />
               <p className="settings-hint">
-                Boş bırakılırsa PATH üzerindeki python kullanılır. .venv
-                oluşturmak birkaç dakika sürebilir.
+                If left empty, python from PATH is used. Creating a .venv
+                may take a few minutes.
               </p>
             </div>
           )}
@@ -162,14 +162,14 @@ export function NewProjectModal() {
             disabled={busy}
             onClick={() => useStore.getState().setNewProjectOpen(false)}
           >
-            İptal
+            Cancel
           </button>
           <button
             className="primary-button"
             disabled={busy || !name.trim()}
             onClick={() => void create()}
           >
-            {busy ? "Oluşturuluyor…" : "Oluştur"}
+            {busy ? "Creating…" : "Create"}
           </button>
         </div>
       </div>

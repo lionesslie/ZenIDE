@@ -19,7 +19,7 @@ async function call<T>(
   args?: Record<string, unknown>
 ): Promise<T> {
   if (!isTauri) {
-    throw new Error("ZenIDE yalnızca masaüstü uygulaması olarak çalışır.");
+    throw new Error("ZenIDE runs only as a desktop application.");
   }
   return invoke<T>(command, args);
 }
@@ -146,7 +146,7 @@ export async function openFolderDialog(): Promise<string | null> {
   const result = await open({
     directory: true,
     multiple: false,
-    title: "Klasör Aç",
+    title: "Open Folder",
   });
   if (Array.isArray(result)) return result[0] ?? null;
   return result ?? null;

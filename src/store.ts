@@ -250,7 +250,7 @@ export const useStore = create<AppState>((set, get) => ({
       get().applyConfig(config);
       set({ configPath, home });
     } catch (error) {
-      console.error("Config yüklenemedi", error);
+      console.error("Config could not be loaded", error);
     }
     const recent = readRecent();
     set({ recent, ready: true });
@@ -293,7 +293,7 @@ export const useStore = create<AppState>((set, get) => ({
     config.editor.vim_mode = !config.editor.vim_mode;
     await get().updateConfig(config);
     get().toast(
-      `Vim modu ${config.editor.vim_mode ? "açık" : "kapalı"}.`,
+      `Vim mode ${config.editor.vim_mode ? "on" : "off"}.`,
       "info"
     );
   },
@@ -400,7 +400,7 @@ export const useStore = create<AppState>((set, get) => ({
     if (!file) return;
     if (file.dirty) {
       const shouldSave = window.confirm(
-        `"${baseName(path)}" dosyasında kaydedilmemiş değişiklikler var. Kapatmadan önce kaydedilsin mi?`
+        `"${baseName(path)}" has unsaved changes. Save before closing?`
       );
       if (shouldSave) {
         const saved = await get().saveFile(path);

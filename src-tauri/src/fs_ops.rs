@@ -26,7 +26,7 @@ fn path_string(path: &Path) -> String {
 #[tauri::command]
 pub fn list_dir(path: String) -> Result<Vec<FileEntry>, String> {
     let mut entries = Vec::new();
-    let dir = fs::read_dir(&path).map_err(|e| format!("{path} okunamadı: {e}"))?;
+    let dir = fs::read_dir(&path).map_err(|e| format!("{path} could not be read: {e}"))?;
     for entry in dir {
         let entry = entry.map_err(|e| e.to_string())?;
         let entry_path = entry.path();
@@ -53,9 +53,9 @@ pub fn list_dir(path: String) -> Result<Vec<FileEntry>, String> {
 pub fn read_file(path: String) -> Result<String, String> {
     let meta = fs::metadata(&path).map_err(|e| format!("{path}: {e}"))?;
     if meta.len() > 10 * 1024 * 1024 {
-        return Err("Dosya 10 MB sınırından büyük; editörde açılmadı.".into());
+        return Err("File exceeds 10 MB; not opened in editor.".into());
     }
-    let bytes = fs::read(&path).map_err(|e| format!("{path} okunamadı: {e}"))?;
+    let bytes = fs::read(&path).map_err(|e| format!("{path} could not be read: {e}"))?;
     let text = String::from_utf8_lossy(&bytes).to_string();
     Ok(text.trim_start_matches('\u{feff}').to_string())
 }
@@ -65,7 +65,7 @@ pub fn write_file(path: String, content: String) -> Result<(), String> {
     if let Some(parent) = Path::new(&path).parent() {
         fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
-    fs::write(&path, content).map_err(|e| format!("{path} yazılamadı: {e}"))
+    fs::write(&path, content).map_err(|e| format!("{path} could not be written: {e}"))
 }
 
 #[tauri::command]
@@ -78,20 +78,20 @@ pub fn create_file(path: String) -> Result<(), String> {
         .create_new(true)
         .open(&path)
         .map(|_| ())
-        .map_err(|e| format!("{path} oluşturulamadı: {e}"))
+        .map_err(|e| format!("{path} could not be created: {e}"))
 }
 
 #[tauri::command]
 pub fn create_dir(path: String) -> Result<(), String> {
-    fs::create_dir_all(&path).map_err(|e| format!("{path} oluşturulamadı: {e}"))
+    fs::create_dir_all(&path).map_err(|e| format!("{path} could not be created: {e}"))
 }
 
 #[tauri::command]
 pub fn rename_path(from: String, to: String) -> Result<(), String> {
     if Path::new(&to).exists() {
-        return Err("Hedef konumda aynı isimde bir öğe zaten var.".into());
+        return Err("An item with the same name already exists at the destination.".into());
     }
-    fs::rename(&from, &to).map_err(|e| format!("Yeniden adlandırılamadı: {e}"))
+    fs::rename(&from, &to).map_err(|e| format!("Could not rename: {e}"))
 }
 
 #[tauri::command]

@@ -82,7 +82,7 @@ export function RightPanel() {
             className={`right-tab ${view === "variables" ? "active" : ""}`}
             onClick={() => useStore.getState().setRightView("variables")}
           >
-            Değişkenler
+            Variables
           </button>
         </div>
         <button
@@ -97,11 +97,11 @@ export function RightPanel() {
         {view === "outline" ? (
           !activeFile ? (
             <div className="empty-panel small">
-              Ana hat için bir dosya açın.
+              Open a file for outline.
             </div>
           ) : outline.length === 0 ? (
             <div className="empty-panel small">
-              Sembol bulunamadı. Dil sunucusu hazır olduğunda tekrar deneyin.
+              No symbols found. Try again when the language server is ready.
             </div>
           ) : (
             <div className="outline-view">

@@ -50,7 +50,7 @@ export function SearchPanel() {
   if (!workspace) {
     return (
       <div className="empty-panel">
-        <p>Arama yapmak için bir klasör açın.</p>
+        <p>Open a folder to search.</p>
       </div>
     );
   }
@@ -80,18 +80,18 @@ export function SearchPanel() {
               checked={caseSensitive}
               onChange={(event) => setCaseSensitive(event.target.checked)}
             />
-            Büyük/küçük harf
+            Case sensitive
           </label>
           <button className="small-button" type="submit" disabled={busy}>
-            {busy ? "Aranıyor…" : "Ara"}
+            {busy ? "Searching…" : "Search"}
           </button>
         </div>
       </form>
       <div className="search-summary">
         {searched && !busy && (
           <span>
-            {results.length} sonuç, {groups.length} dosya
-            {results.length >= 800 ? " (sınır)" : ""}
+            {results.length} results, {groups.length} files
+            {results.length >= 800 ? " (limit)" : ""}
           </span>
         )}
       </div>
@@ -121,7 +121,7 @@ export function SearchPanel() {
           </div>
         ))}
         {searched && !busy && results.length === 0 && (
-          <div className="empty-panel small">Sonuç bulunamadı.</div>
+          <div className="empty-panel small">No results found.</div>
         )}
       </div>
     </div>

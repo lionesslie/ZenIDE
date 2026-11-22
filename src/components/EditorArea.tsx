@@ -317,7 +317,7 @@ export function EditorArea() {
         </div>
         <button
           className="icon-button small tab-quick-open"
-          title="Hızlı Aç (Ctrl+P)"
+          title="Quick Open (Ctrl+P)"
           onClick={() => useStore.getState().setQuickOpenOpen(true)}
         >
           <PlusIcon size={13} />
