@@ -47,9 +47,23 @@ export default function App() {
   useEffect(() => {
     const unlisteners: (() => void)[] = [];
     let cancelled = false;
+    let fsRefreshTimer: number | undefined;
     void api
       .onEvent<ZenConfig>("config-changed", (config) => {
         useStore.getState().applyConfig(config);
+      })
+      .then((unlisten) => {
+        if (cancelled) unlisten();
+        else unlisteners.push(unlisten);
+      });
+    void api
+      .onEvent<{ path: string; root: string }>("fs-changed", () => {
+        if (fsRefreshTimer !== undefined) window.clearTimeout(fsRefreshTimer);
+        fsRefreshTimer = window.setTimeout(() => {
+          const state = useStore.getState();
+          state.refreshTree();
+          void state.refreshGit();
+        }, 150);
       })
       .then((unlisten) => {
         if (cancelled) unlisten();
@@ -62,6 +76,7 @@ export default function App() {
     });
     return () => {
       cancelled = true;
+      if (fsRefreshTimer !== undefined) window.clearTimeout(fsRefreshTimer);
       offClose();
       offSave();
       offWorkspace();

@@ -6,6 +6,7 @@ mod lsp;
 mod process;
 mod projects;
 mod pty;
+mod workspace;
 
 pub fn run() {
     // Avoid GBM buffer creation failures on some Linux/Wayland setups.
@@ -17,6 +18,7 @@ pub fn run() {
         .manage(process::ProcState::default())
         .manage(lsp::LspState::default())
         .manage(dap::DapState::default())
+        .manage(workspace::WorkspaceWatchState::default())
         .setup(|app| {
             if let Err(err) = config::init(app.handle()) {
                 eprintln!("ZenIDE config initialization failed: {err}");
@@ -37,6 +39,7 @@ pub fn run() {
             fs_ops::delete_path,
             fs_ops::path_exists,
             fs_ops::home_dir,
+            workspace::watch_workspace,
             fs_ops::search_files,
             fs_ops::search_in_files,
             projects::detect_project,

@@ -3,21 +3,25 @@ import type { ReactNode } from "react";
 interface IconProps {
   size?: number;
   className?: string;
+  viewBox?: string;
+  strokeWidth?: number;
 }
 
 function Svg({
   size = 16,
   className,
+  viewBox = "0 0 16 16",
+  strokeWidth = 1.5,
   children,
 }: IconProps & { children: ReactNode }) {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 16 16"
+      viewBox={viewBox}
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.3}
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -39,7 +43,7 @@ export function MinimizeIcon(props: IconProps) {
 export function MaximizeIcon(props: IconProps) {
   return (
     <Svg {...props}>
-      <rect x="3.2" y="3.2" width="9.6" height="9.6" rx="1.4" />
+      <rect x="3" y="3" width="10" height="10" rx="1.2" />
     </Svg>
   );
 }
@@ -47,8 +51,8 @@ export function MaximizeIcon(props: IconProps) {
 export function RestoreIcon(props: IconProps) {
   return (
     <Svg {...props}>
-      <rect x="2.6" y="5.4" width="8" height="8" rx="1.1" />
-      <path d="M5.4 5.4V4.3c0-.6.5-1.1 1.1-1.1h5.2c.6 0 1.1.5 1.1 1.1v5.2c0 .6-.5 1.1-1.1 1.1h-1.1" />
+      <path d="M4.8 11.2V4.8a1 1 0 0 1 1-1h6.4a1 1 0 0 1 1 1v6.4a1 1 0 0 1-1 1H4.8z" />
+      <path d="M6.6 3.8V2.9a1 1 0 0 1 1-1h4.7a1 1 0 0 1 1 1v4.7a1 1 0 0 1-1 1h-.9" />
     </Svg>
   );
 }
@@ -105,9 +109,9 @@ export function PythonIcon(props: IconProps) {
 
 export function SettingsIcon(props: IconProps) {
   return (
-    <Svg {...props}>
-      <circle cx="8" cy="8" r="2.2" />
-      <path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1" />
+    <Svg {...props} viewBox="0 0 24 24" strokeWidth={1.8}>
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
     </Svg>
   );
 }
@@ -241,8 +245,9 @@ export function PencilIcon(props: IconProps) {
 export function NewFileIcon(props: IconProps) {
   return (
     <Svg {...props}>
-      <path d="M3.5 2h5l3 3v6.2M9.5 2v3h3" />
-      <path d="M8 9.5v4M6 11.5h4" />
+      <path d="M3.5 2.2h5l3 3v6.1a1.2 1.2 0 0 1-1.2 1.2H4.7a1.2 1.2 0 0 1-1.2-1.2V3.4a1.2 1.2 0 0 1 1.2-1.2z" />
+      <path d="M8.5 2.2v3h3" />
+      <path d="M8.1 9v3.4M6.4 10.7h3.4" />
     </Svg>
   );
 }
@@ -250,8 +255,8 @@ export function NewFileIcon(props: IconProps) {
 export function NewFolderIcon(props: IconProps) {
   return (
     <Svg {...props}>
-      <path d="M2 4.2h4.2l1.2 1.5h6.6v6.8H2z" />
-      <path d="M8 8v3.2M6.4 9.6h3.2" />
+      <path d="M2.2 4.4h4.1l1.2 1.5h6.3v6.5a1.1 1.1 0 0 1-1.1 1.1H3.3a1.1 1.1 0 0 1-1.1-1.1z" />
+      <path d="M8 8.3v3.4M6.3 10h3.4" />
     </Svg>
   );
 }

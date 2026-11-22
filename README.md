@@ -120,7 +120,7 @@ line_numbers = true
 background = "#0b0b0c"
 panel = "#151517"
 border = "#27272b"
-text = "#f0f0f2"
+text = "#eeeef1"
 accent = "#d9d9de"
 editor_background = "#08080a"
 
@@ -129,6 +129,8 @@ sidebar_width = 270
 bottom_panel_height = 240
 right_panel_width = 300
 show_right_panel = false
+animations_enabled = true   # arayüz animasyonlarını kapatmak için false
+font_weight = 400           # arayüz yazı kalınlığı (300-800)
 
 [terminal]
 shell = ""            # boşsa platform varsayılanı
@@ -159,6 +161,7 @@ rust_program = ""             # boşsa target/debug/<paket>
 cpp_program = ""              # boşsa CMake çıktısı
 
 [explorer]
+font_size = 14              # gezgin yazı boyutu (10-24)
 exclude = [".git", "node_modules", "target", "build", ".venv", "venv", "__pycache__", ".idea", ".DS_Store"]
 
 [keybindings]

@@ -41,6 +41,8 @@ export const defaultConfig: ZenConfig = {
     bottom_panel_height: 240,
     right_panel_width: 300,
     show_right_panel: false,
+    animations_enabled: true,
+    font_weight: 400,
   },
   terminal: {
     shell: "",
@@ -71,6 +73,7 @@ export const defaultConfig: ZenConfig = {
     cpp_program: "",
   },
   explorer: {
+    font_size: 14,
     exclude: [
       ".git",
       "node_modules",

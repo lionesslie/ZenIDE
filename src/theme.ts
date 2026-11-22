@@ -1,5 +1,10 @@
 import * as monaco from "monaco-editor";
-import type { EditorConfig, ThemeConfig } from "./types";
+import type {
+  EditorConfig,
+  ExplorerConfig,
+  ThemeConfig,
+  UiConfig,
+} from "./types";
 
 export function applyTheme(theme: ThemeConfig): void {
   const root = document.documentElement;
@@ -10,6 +15,13 @@ export function applyTheme(theme: ThemeConfig): void {
   root.style.setProperty("--accent", theme.accent);
   root.style.setProperty("--editor-bg", theme.editor_background);
   defineMonacoTheme(theme);
+}
+
+export function applyUiSettings(ui: UiConfig, explorer: ExplorerConfig): void {
+  const root = document.documentElement;
+  root.style.setProperty("--font-weight", String(ui.font_weight));
+  root.style.setProperty("--explorer-font-size", `${explorer.font_size}px`);
+  root.classList.toggle("no-animations", !ui.animations_enabled);
 }
 
 export function applyEditorFont(editor: EditorConfig): void {

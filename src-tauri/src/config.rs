@@ -63,6 +63,8 @@ pub struct UiConfig {
     pub bottom_panel_height: u32,
     pub right_panel_width: u32,
     pub show_right_panel: bool,
+    pub animations_enabled: bool,
+    pub font_weight: u32,
 }
 
 impl Default for UiConfig {
@@ -72,6 +74,8 @@ impl Default for UiConfig {
             bottom_panel_height: 240,
             right_panel_width: 300,
             show_right_panel: false,
+            animations_enabled: true,
+            font_weight: 400,
         }
     }
 }
@@ -168,11 +172,13 @@ impl Default for DebugConfig {
 #[serde(default)]
 pub struct ExplorerConfig {
     pub exclude: Vec<String>,
+    pub font_size: u32,
 }
 
 impl Default for ExplorerConfig {
     fn default() -> Self {
         Self {
+            font_size: 14,
             exclude: vec![
                 ".git".into(),
                 "node_modules".into(),
@@ -251,6 +257,8 @@ impl ZenConfig {
         self.ui.sidebar_width = self.ui.sidebar_width.clamp(180, 600);
         self.ui.bottom_panel_height = self.ui.bottom_panel_height.clamp(120, 800);
         self.ui.right_panel_width = self.ui.right_panel_width.clamp(200, 700);
+        self.ui.font_weight = self.ui.font_weight.clamp(300, 800);
+        self.explorer.font_size = self.explorer.font_size.clamp(10, 24);
         if self.build.cmake_build_dir.trim().is_empty() {
             self.build.cmake_build_dir = "build".into();
         }

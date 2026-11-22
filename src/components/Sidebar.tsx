@@ -4,8 +4,18 @@ import { SearchPanel } from "./SearchPanel";
 import { GitPanel } from "./GitPanel";
 import { DebugPanel } from "./DebugPanel";
 import { PythonPanel } from "./PythonPanel";
-import { CloseIcon, PlusIcon, RefreshIcon } from "./Icons";
-import { openFolder } from "../actions";
+import {
+  CloseIcon,
+  NewFileIcon,
+  NewFolderIcon,
+  PlusIcon,
+  RefreshIcon,
+} from "./Icons";
+import {
+  createFileIn,
+  createFolderIn,
+  openFolder,
+} from "../actions";
 
 const titles: Record<string, string> = {
   explorer: "EXPLORER",
@@ -18,7 +28,9 @@ const titles: Record<string, string> = {
 export function Sidebar() {
   const view = useStore((state) => state.sidebarView);
   const workspace = useStore((state) => state.workspace);
+  const currentFolder = useStore((state) => state.currentFolder);
   const width = useStore((state) => state.config.ui.sidebar_width);
+  const targetFolder = currentFolder ?? workspace;
 
   return (
     <div className="sidebar" style={{ width }}>
@@ -27,6 +39,26 @@ export function Sidebar() {
         <div className="sidebar-actions">
           {view === "explorer" && (
             <>
+              <button
+                className="icon-button small"
+                title="Yeni dosya"
+                disabled={!targetFolder}
+                onClick={() => {
+                  if (targetFolder) void createFileIn(targetFolder);
+                }}
+              >
+                <NewFileIcon size={14} />
+              </button>
+              <button
+                className="icon-button small"
+                title="Yeni klasör"
+                disabled={!targetFolder}
+                onClick={() => {
+                  if (targetFolder) void createFolderIn(targetFolder);
+                }}
+              >
+                <NewFolderIcon size={14} />
+              </button>
               <button
                 className="icon-button small"
                 title="Yeni Proje"

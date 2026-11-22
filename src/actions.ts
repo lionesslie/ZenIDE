@@ -16,6 +16,7 @@ import {
 } from "./services/debugService";
 import { refreshPythonPackages } from "./services/pythonService";
 import { lspManager } from "./lsp/LspManager";
+import { joinPath } from "./utils/path";
 
 export async function openFolder(): Promise<void> {
   try {
@@ -23,6 +24,32 @@ export async function openFolder(): Promise<void> {
     if (folder) {
       await useStore.getState().setWorkspace(folder);
     }
+  } catch (error) {
+    useStore.getState().toast(String(error), "error");
+  }
+}
+
+export async function createFileIn(dir: string): Promise<void> {
+  const name = window.prompt("Yeni dosya adı:");
+  if (!name?.trim()) return;
+  const path = joinPath(dir, name.trim());
+  try {
+    await api.createFile(path);
+    useStore.getState().refreshTree();
+    void useStore.getState().refreshGit();
+    await useStore.getState().openFile(path);
+  } catch (error) {
+    useStore.getState().toast(String(error), "error");
+  }
+}
+
+export async function createFolderIn(dir: string): Promise<void> {
+  const name = window.prompt("Yeni klasör adı:");
+  if (!name?.trim()) return;
+  try {
+    await api.createDir(joinPath(dir, name.trim()));
+    useStore.getState().refreshTree();
+    void useStore.getState().refreshGit();
   } catch (error) {
     useStore.getState().toast(String(error), "error");
   }

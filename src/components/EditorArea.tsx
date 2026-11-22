@@ -14,6 +14,9 @@ export function EditorArea() {
   const openFiles = useStore((state) => state.openFiles);
   const activeFile = useStore((state) => state.activeFile);
   const editorConfig = useStore((state) => state.config.editor);
+  const animationsEnabled = useStore(
+    (state) => state.config.ui.animations_enabled
+  );
   const breakpoints = useStore((state) => state.breakpoints);
   const debugActive = useStore((state) => state.debugActive);
   const debugPaused = useStore((state) => state.debugPaused);
@@ -69,9 +72,9 @@ export function EditorArea() {
       folding: true,
       renderWhitespace: "selection",
       scrollBeyondLastLine: false,
-      smoothScrolling: true,
-      cursorBlinking: "smooth",
-      cursorSmoothCaretAnimation: "on",
+      smoothScrolling: false,
+      cursorBlinking: animationsEnabled ? "blink" : "solid",
+      cursorSmoothCaretAnimation: "off",
       bracketPairColorization: { enabled: true },
       guides: { bracketPairs: true, indentation: true },
       padding: { top: 8 },
@@ -188,8 +191,11 @@ export function EditorArea() {
       wordWrap: editorConfig.word_wrap ? "on" : "off",
       minimap: { enabled: editorConfig.minimap },
       lineNumbers: editorConfig.line_numbers ? "on" : "off",
+      smoothScrolling: false,
+      cursorBlinking: animationsEnabled ? "blink" : "solid",
+      cursorSmoothCaretAnimation: "off",
     });
-  }, [editorConfig]);
+  }, [editorConfig, animationsEnabled]);
 
   useEffect(() => {
     const editor = editorRef.current;

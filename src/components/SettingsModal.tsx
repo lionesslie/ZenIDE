@@ -292,6 +292,30 @@ export function SettingsModal() {
                       }
                     />
                   </div>
+                  <div className="settings-row">
+                    <label className="settings-label">Font kalınlığı</label>
+                    <input
+                      className="form-input number"
+                      type="number"
+                      min={300}
+                      max={800}
+                      step={100}
+                      value={draft.ui.font_weight}
+                      onChange={(event) =>
+                        updateUi({ font_weight: Number(event.target.value) })
+                      }
+                    />
+                  </div>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={draft.ui.animations_enabled}
+                      onChange={(event) =>
+                        updateUi({ animations_enabled: event.target.checked })
+                      }
+                    />
+                    Arayüz animasyonları
+                  </label>
                   <label className="checkbox-label">
                     <input
                       type="checkbox"
@@ -642,6 +666,19 @@ export function SettingsModal() {
             {section === "explorer" && (
               <div className="settings-section">
                 <h3>Gezgin</h3>
+                <div className="settings-row">
+                  <label className="settings-label">Font boyutu</label>
+                  <input
+                    className="form-input number"
+                    type="number"
+                    min={10}
+                    max={24}
+                    value={draft.explorer.font_size}
+                    onChange={(event) =>
+                      updateExplorer({ font_size: Number(event.target.value) })
+                    }
+                  />
+                </div>
                 <p className="settings-hint">
                   Excluded folder/file names (one per line).
                 </p>

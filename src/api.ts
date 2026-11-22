@@ -49,6 +49,8 @@ export const renamePath = (from: string, to: string) =>
 export const deletePath = (path: string) => call<void>("delete_path", { path });
 export const pathExists = (path: string) =>
   call<boolean>("path_exists", { path });
+export const watchWorkspace = (path: string) =>
+  call<void>("watch_workspace", { path });
 export const homeDir = () => call<string>("home_dir");
 export const searchFiles = (
   root: string,

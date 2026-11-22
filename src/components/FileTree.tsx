@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import * as api from "../api";
 import { useStore } from "../store";
-import { openFolder } from "../actions";
+import { createFileIn, createFolderIn, openFolder } from "../actions";
 import { baseName, dirName, isSubPath, joinPath, pathKey, relativePath } from "../utils/path";
 import type { FileEntry, GitEntry } from "../types";
 import {
@@ -94,6 +94,7 @@ function TreeNode({
 
   const handleClick = () => {
     if (entry.is_dir) {
+      useStore.getState().setCurrentFolder(entry.path);
       setExpanded((value) => !value);
     } else {
       void useStore.getState().openFile(entry.path);
@@ -212,6 +213,7 @@ function TreeNode({
 
 export function FileTree() {
   const workspace = useStore((state) => state.workspace);
+  const currentFolder = useStore((state) => state.currentFolder);
   const treeVersion = useStore((state) => state.treeVersion);
   const excludes = useStore((state) => state.config.explorer.exclude);
   const git = useStore((state) => state.git);
@@ -243,9 +245,11 @@ export function FileTree() {
     if (!contextMenu) return;
     const close = () => setContextMenu(null);
     window.addEventListener("click", close);
+    window.addEventListener("contextmenu", close);
     window.addEventListener("blur", close);
     return () => {
       window.removeEventListener("click", close);
+      window.removeEventListener("contextmenu", close);
       window.removeEventListener("blur", close);
     };
   }, [contextMenu]);
@@ -274,30 +278,6 @@ export function FileTree() {
   const refresh = () => {
     useStore.getState().refreshTree();
     void useStore.getState().refreshGit();
-  };
-
-  const createNewFile = async (dir: string) => {
-    const name = window.prompt("New file name:");
-    if (!name?.trim()) return;
-    const path = joinPath(dir, name.trim());
-    try {
-      await api.createFile(path);
-      refresh();
-      await useStore.getState().openFile(path);
-    } catch (createError) {
-      useStore.getState().toast(String(createError), "error");
-    }
-  };
-
-  const createNewFolder = async (dir: string) => {
-    const name = window.prompt("New folder name:");
-    if (!name?.trim()) return;
-    try {
-      await api.createDir(joinPath(dir, name.trim()));
-      refresh();
-    } catch (createError) {
-      useStore.getState().toast(String(createError), "error");
-    }
   };
 
   const renameEntry = async (entry: FileEntry) => {
@@ -371,12 +351,15 @@ export function FileTree() {
     ? contextMenu.entry.is_dir
       ? contextMenu.entry.path
       : dirName(contextMenu.entry.path)
-    : workspace;
+    : currentFolder ?? workspace;
 
   return (
     <div
       className="file-tree"
-      onContextMenu={(event) => openContextMenu(event, null)}
+      onContextMenu={(event) => {
+        event.stopPropagation();
+        openContextMenu(event, null);
+      }}
       onDragOver={(event) => event.preventDefault()}
       onDrop={(event) => {
         event.preventDefault();
@@ -404,13 +387,16 @@ export function FileTree() {
           className="context-menu"
           style={{ left: contextMenu.x, top: contextMenu.y }}
           onClick={(event) => event.stopPropagation()}
-          onContextMenu={(event) => event.preventDefault()}
+          onContextMenu={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
         >
           <button
             className="menu-item"
             onClick={() => {
               setContextMenu(null);
-              void createNewFile(contextDir);
+              void createFileIn(contextDir);
             }}
           >
             <NewFileIcon size={14} /> <span>New File</span>
@@ -419,7 +405,7 @@ export function FileTree() {
             className="menu-item"
             onClick={() => {
               setContextMenu(null);
-              void createNewFolder(contextDir);
+              void createFolderIn(contextDir);
             }}
           >
             <NewFolderIcon size={14} /> <span>New Folder</span>

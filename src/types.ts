@@ -22,6 +22,8 @@ export interface UiConfig {
   bottom_panel_height: number;
   right_panel_width: number;
   show_right_panel: boolean;
+  animations_enabled: boolean;
+  font_weight: number;
 }
 
 export interface TerminalConfig {
@@ -58,6 +60,7 @@ export interface DebugConfig {
 
 export interface ExplorerConfig {
   exclude: string[];
+  font_size: number;
 }
 
 export interface ZenConfig {

@@ -2,7 +2,7 @@ import { create } from "zustand";
 import * as api from "./api";
 import { defaultConfig } from "./config";
 import { disposeModel, ensureModel, getModel } from "./editor/models";
-import { applyEditorFont, applyTheme } from "./theme";
+import { applyEditorFont, applyTheme, applyUiSettings } from "./theme";
 import { emit } from "./bus";
 import { detectLanguage } from "./utils/language";
 import {
@@ -87,6 +87,7 @@ function cloneConfig(config: ZenConfig): ZenConfig {
 interface AppState {
   ready: boolean;
   workspace: string | null;
+  currentFolder: string | null;
   project: ProjectInfo | null;
   config: ZenConfig;
   configPath: string;
@@ -134,6 +135,7 @@ interface AppState {
   updateConfig: (config: ZenConfig) => Promise<void>;
   toggleVim: () => Promise<void>;
   setWorkspace: (path: string | null) => Promise<void>;
+  setCurrentFolder: (path: string | null) => void;
   refreshProject: () => Promise<void>;
   refreshTree: () => void;
   openFile: (path: string, line?: number, column?: number) => Promise<void>;
@@ -198,6 +200,7 @@ interface AppState {
 export const useStore = create<AppState>((set, get) => ({
   ready: false,
   workspace: null,
+  currentFolder: null,
   project: null,
   config: cloneConfig(defaultConfig),
   configPath: "",
@@ -274,6 +277,7 @@ export const useStore = create<AppState>((set, get) => ({
     set({ config });
     applyTheme(config.theme);
     applyEditorFont(config.editor);
+    applyUiSettings(config.ui, config.explorer);
     if (config.ui.show_right_panel !== previous.ui.show_right_panel) {
       set({ rightPanelVisible: config.ui.show_right_panel });
     }
@@ -310,6 +314,7 @@ export const useStore = create<AppState>((set, get) => ({
     }
     set({
       workspace: path,
+      currentFolder: path,
       project: null,
       openFiles: [],
       activeFile: null,
@@ -335,6 +340,7 @@ export const useStore = create<AppState>((set, get) => ({
     if (!path) {
       localStorage.removeItem("zenide.lastWorkspace");
       emit("workspace-changed", path);
+      void api.watchWorkspace("").catch(() => undefined);
       return;
     }
     localStorage.setItem("zenide.lastWorkspace", path);
@@ -345,6 +351,9 @@ export const useStore = create<AppState>((set, get) => ({
     localStorage.setItem("zenide.recent", JSON.stringify(recent));
     set({ recent });
     emit("workspace-changed", path);
+    void api.watchWorkspace(path).catch((error) => {
+      console.error("Workspace watcher could not be started", error);
+    });
     await get().refreshProject();
     await Promise.all([
       get().refreshGit(),
@@ -366,6 +375,8 @@ export const useStore = create<AppState>((set, get) => ({
 
   refreshTree: () => set((state) => ({ treeVersion: state.treeVersion + 1 })),
 
+  setCurrentFolder: (path) => set({ currentFolder: path }),
+
   openFile: async (path, line, column) => {
     const existing = get().openFiles.find(
       (file) => pathKey(file.path) === pathKey(path)
@@ -373,6 +384,7 @@ export const useStore = create<AppState>((set, get) => ({
     if (existing) {
       set({
         activeFile: existing.path,
+        currentFolder: dirName(existing.path),
         pendingReveal: line
           ? { path: existing.path, line, column: column ?? 1 }
           : null,
@@ -386,6 +398,7 @@ export const useStore = create<AppState>((set, get) => ({
       set((state) => ({
         openFiles: [...state.openFiles, { path, language, dirty: false }],
         activeFile: path,
+        currentFolder: dirName(path),
         pendingReveal: line ? { path, line, column: column ?? 1 } : null,
       }));
     } catch (error) {
@@ -445,6 +458,7 @@ export const useStore = create<AppState>((set, get) => ({
         ),
       }));
       emit("file-saved", path);
+      get().refreshTree();
       void get().refreshGit();
       return true;
     } catch (error) {

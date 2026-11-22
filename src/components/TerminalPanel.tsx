@@ -4,11 +4,13 @@ import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 import * as api from "../api";
 import { useStore } from "../store";
+import { baseName } from "../utils/path";
 import { CloseIcon, PlusIcon, TerminalIcon } from "./Icons";
 
 interface SessionMeta {
   id: number;
   title: string;
+  cwd: string;
   dead: boolean;
 }
 
@@ -25,6 +27,7 @@ const exitHandlers = new Map<number, () => void>();
 let listenersReady = false;
 let listenersPromise: Promise<void> | null = null;
 let nextId = 1;
+let currentActiveId: number | null = null;
 
 function decodeBase64(data: string): Uint8Array {
   const binary = atob(data);
@@ -76,6 +79,10 @@ export function TerminalPanel() {
   const bottomTab = useStore((state) => state.bottomTab);
   const terminalConfig = useStore((state) => state.config.terminal);
   const theme = useStore((state) => state.config.theme);
+  const currentFolder = useStore((state) => state.currentFolder);
+  const animationsEnabled = useStore(
+    (state) => state.config.ui.animations_enabled
+  );
   const [sessions, setSessions] = useState<SessionMeta[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
   const hostsRef = useRef<HTMLDivElement>(null);
@@ -89,6 +96,7 @@ export function TerminalPanel() {
 
   const activate = (id: number) => {
     setActiveId(id);
+    currentActiveId = id;
     for (const [sessionId, session] of terminalMap) {
       session.host.style.display = sessionId === id ? "block" : "none";
     }
@@ -109,11 +117,13 @@ export function TerminalPanel() {
     await ensureListeners();
     const id = nextId++;
     const title = `Terminal ${counterRef.current++}`;
+    const state = useStore.getState();
+    const cwd = state.currentFolder ?? state.workspace ?? state.home ?? "";
     const term = new Terminal({
       fontFamily: `"${terminalConfig.font_family.replace(/"/g, "")}", "Cascadia Code", Consolas, monospace`,
       fontSize: terminalConfig.font_size,
       scrollback: terminalConfig.scrollback,
-      cursorBlink: true,
+      cursorBlink: animationsEnabled,
       allowProposedApi: true,
       theme: {
         background: theme.background,
@@ -150,7 +160,7 @@ export function TerminalPanel() {
     terminalMap.set(id, session);
     setSessions((previous) => [
       ...previous,
-      { id, title, dead: false },
+      { id, title, cwd, dead: false },
     ]);
     registerOutput(id, (data) => term.write(data));
     exitHandlers.set(id, () => {
@@ -174,13 +184,7 @@ export function TerminalPanel() {
     const cols = Math.max(term.cols, 80);
     const rows = Math.max(term.rows, 24);
     try {
-      await api.ptySpawn(
-        id,
-        useStore.getState().workspace ?? useStore.getState().home ?? "",
-        terminalConfig.shell,
-        cols,
-        rows
-      );
+      await api.ptySpawn(id, cwd, terminalConfig.shell, cols, rows);
     } catch (error) {
       term.write(`\r\n\x1b[31mFailed to start terminal: ${String(error)}\x1b[0m\r\n`);
     }
@@ -204,6 +208,7 @@ export function TerminalPanel() {
           window.setTimeout(() => activate(next), 0);
         } else {
           setActiveId(null);
+          currentActiveId = null;
         }
       }
       return remaining;
@@ -260,6 +265,20 @@ export function TerminalPanel() {
 
   useEffect(() => {
     for (const session of terminalMap.values()) {
+      session.term.options.cursorBlink = animationsEnabled;
+    }
+  }, [animationsEnabled]);
+
+  useEffect(() => {
+    if (!currentFolder || terminalMap.size === 0) return;
+    const id = currentActiveId ?? [...terminalMap.keys()].pop() ?? null;
+    if (id === null) return;
+    const escaped = currentFolder.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    void api.ptyWrite(id, `cd "${escaped}"\r`).catch(() => undefined);
+  }, [currentFolder]);
+
+  useEffect(() => {
+    for (const session of terminalMap.values()) {
       session.term.options.fontSize = terminalConfig.font_size;
       session.term.options.fontFamily = `"${terminalConfig.font_family.replace(/"/g, "")}", "Cascadia Code", Consolas, monospace`;
       session.term.options.scrollback = terminalConfig.scrollback;
@@ -283,10 +302,11 @@ export function TerminalPanel() {
             className={`terminal-tab ${
               activeId === session.id ? "active" : ""
             } ${session.dead ? "dead" : ""}`}
+            title={`${session.cwd} · ${session.title}`}
             onClick={() => activate(session.id)}
           >
             <TerminalIcon size={12} />
-            <span>{session.title}</span>
+            <span>{baseName(session.cwd) || session.title}</span>
             <button
               className="terminal-tab-close"
               title="Terminali kapat"
