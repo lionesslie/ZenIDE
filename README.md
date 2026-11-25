@@ -117,12 +117,12 @@ minimap = true
 line_numbers = true
 
 [theme]
-background = "#0b0b0c"
-panel = "#151517"
-border = "#27272b"
-text = "#eeeef1"
-accent = "#d9d9de"
-editor_background = "#08080a"
+background = "#050505"
+panel = "#101010"
+border = "#2a2a2a"
+text = "#f2f2f2"
+accent = "#f5f5f5"          # monokrom vurgu rengi
+editor_background = "#0a0a0a"
 
 [ui]
 sidebar_width = 270
@@ -170,6 +170,13 @@ quick_open = "Ctrl+P"
 toggle_terminal = "Ctrl+`"
 debug = "F5"
 ```
+
+### Görünüm Notları
+
+- Arayüz monokromdur: siyah zemin üzerinde beyaz ve gri tonları kullanılır. Vurgu rengi `[theme].accent` ile değiştirilir; seçimler ve odak halkaları bu renkten türetilir.
+- Pencereler, paneller, sekmeler ve düğmeler yuvarlatılmıştır. Paneller yarı saydam katmanlar kullanır, ancak pencere yüzeyi opak siyahtır; böylece WebKitGTK'da saydam pencere kaynaklı beyaz ekran sorunu oluşmaz.
+- `backdrop-filter`/blur kullanılmaz. Yarı saydam yüzeyleri tamamen opak yapmak için geliştirici araçlarından `<html>` öğesine `reduce-effects` sınıfını ekleyin.
+- `[ui].animations_enabled = false` geçişleri kapatır; işletim sisteminin `prefers-reduced-motion` ayarı da otomatik olarak dikkate alınır.
 
 ### LSP Notları
 

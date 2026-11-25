@@ -46,12 +46,12 @@ pub struct ThemeConfig {
 impl Default for ThemeConfig {
     fn default() -> Self {
         Self {
-            background: "#0b0b0c".into(),
-            panel: "#151517".into(),
-            border: "#27272b".into(),
-            text: "#f0f0f2".into(),
-            accent: "#d9d9de".into(),
-            editor_background: "#08080a".into(),
+            background: "#050505".into(),
+            panel: "#101010".into(),
+            border: "#2a2a2a".into(),
+            text: "#f2f2f2".into(),
+            accent: "#f5f5f5".into(),
+            editor_background: "#0a0a0a".into(),
         }
     }
 }

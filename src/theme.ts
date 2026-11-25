@@ -6,13 +6,62 @@ import type {
   UiConfig,
 } from "./types";
 
+function parseHex(value: string): [number, number, number] | null {
+  const hex = value.trim();
+  const short = /^#([0-9a-f]{3})$/i.exec(hex);
+  if (short) {
+    const [r, g, b] = short[1].split("");
+    return [
+      parseInt(r + r, 16),
+      parseInt(g + g, 16),
+      parseInt(b + b, 16),
+    ];
+  }
+  const full = /^#([0-9a-f]{6})$/i.exec(hex);
+  if (!full) return null;
+  const raw = full[1];
+  return [
+    parseInt(raw.slice(0, 2), 16),
+    parseInt(raw.slice(2, 4), 16),
+    parseInt(raw.slice(4, 6), 16),
+  ];
+}
+
+function withAlpha(value: string, alpha: number): string {
+  const rgb = parseHex(value);
+  if (!rgb) return value;
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+}
+
+function lighten(value: string, amount: number): string {
+  const rgb = parseHex(value);
+  if (!rgb) return value;
+  const mixed = rgb.map((channel) =>
+    Math.round(channel + (255 - channel) * amount)
+  );
+  return `#${mixed.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function alphaSuffix(value: string, suffix: string): string {
+  return /^#[0-9a-f]{6}$/i.test(value.trim()) ? `${value.trim()}${suffix}` : value;
+}
+
 export function applyTheme(theme: ThemeConfig): void {
   const root = document.documentElement;
+  const surfaceSolid = theme.panel;
+  const surface2Solid = lighten(theme.panel, 0.07);
   root.style.setProperty("--bg", theme.background);
-  root.style.setProperty("--panel", theme.panel);
+  root.style.setProperty("--surface-solid", surfaceSolid);
+  root.style.setProperty("--surface-2-solid", surface2Solid);
+  root.style.setProperty("--surface", withAlpha(surfaceSolid, 0.72));
+  root.style.setProperty("--surface-2", withAlpha(surface2Solid, 0.82));
   root.style.setProperty("--border", theme.border);
+  root.style.setProperty("--border-strong", withAlpha(theme.text, 0.16));
   root.style.setProperty("--text", theme.text);
   root.style.setProperty("--accent", theme.accent);
+  root.style.setProperty("--accent-soft", withAlpha(theme.accent, 0.16));
+  root.style.setProperty("--accent-strong", withAlpha(theme.accent, 0.34));
+  root.style.setProperty("--active", withAlpha(theme.accent, 0.15));
   root.style.setProperty("--editor-bg", theme.editor_background);
   defineMonacoTheme(theme);
 }
@@ -37,63 +86,65 @@ export function defineMonacoTheme(theme: ThemeConfig): void {
     base: "vs-dark",
     inherit: true,
     rules: [
-      { token: "comment", foreground: "7b7b82", fontStyle: "italic" },
-      { token: "keyword", foreground: "d0a184" },
-      { token: "keyword.control", foreground: "d0a184" },
-      { token: "string", foreground: "8fbf95" },
-      { token: "string.escape", foreground: "d9a56b" },
-      { token: "number", foreground: "8fc4c9" },
-      { token: "regexp", foreground: "c7c7cd" },
-      { token: "type", foreground: "c3d6b8" },
-      { token: "type.identifier", foreground: "c3d6b8" },
+      { token: "comment", foreground: "7c7c7c", fontStyle: "italic" },
+      { token: "keyword", foreground: "e8e8e8" },
+      { token: "keyword.control", foreground: "e8e8e8" },
+      { token: "string", foreground: "b8b8b8" },
+      { token: "string.escape", foreground: "d4d4d4" },
+      { token: "number", foreground: "cfcfcf" },
+      { token: "regexp", foreground: "c4c4c4" },
+      { token: "type", foreground: "dedede" },
+      { token: "type.identifier", foreground: "dedede" },
+      { token: "function", foreground: "f0f0f0" },
+      { token: "constant", foreground: "c9c9c9" },
       { token: "identifier", foreground: theme.text.replace("#", "") },
-      { token: "delimiter", foreground: "94949b" },
-      { token: "operator", foreground: "c9c9cf" },
-      { token: "tag", foreground: "d9d9de" },
-      { token: "attribute.name", foreground: "d0a184" },
+      { token: "delimiter", foreground: "8a8a8a" },
+      { token: "operator", foreground: "bdbdbd" },
+      { token: "tag", foreground: "e0e0e0" },
+      { token: "attribute.name", foreground: "c9c9c9" },
     ],
     colors: {
       "editor.background": theme.editor_background,
       "editor.foreground": theme.text,
-      "editorLineNumber.foreground": "#4c4c52",
-      "editorLineNumber.activeForeground": "#b8b8be",
-      "editor.selectionBackground": "#3a3a40",
-      "editor.inactiveSelectionBackground": "#2a2a2f",
-      "editor.lineHighlightBackground": "#1a1a1d",
+      "editorLineNumber.foreground": "#575757",
+      "editorLineNumber.activeForeground": "#d0d0d0",
+      "editor.selectionBackground": alphaSuffix(theme.accent, "40"),
+      "editor.inactiveSelectionBackground": alphaSuffix(theme.accent, "22"),
+      "editor.lineHighlightBackground": "#ffffff08",
       "editor.lineHighlightBorder": "#00000000",
-      "editorCursor.foreground": "#e4e4e8",
-      "editorIndentGuide.background1": "#2a2a2e",
-      "editorIndentGuide.activeBackground1": "#3c3c42",
+      "editorCursor.foreground": theme.accent,
+      "editorIndentGuide.background1": "#242424",
+      "editorIndentGuide.activeBackground1": "#3d3d3d",
       "editorGutter.background": theme.editor_background,
-      "editorGutter.addedBackground": "#487e4f",
-      "editorGutter.modifiedBackground": "#8f7b4a",
-      "editorGutter.deletedBackground": "#a34a4a",
+      "editorGutter.addedBackground": "#d0d0d0",
+      "editorGutter.modifiedBackground": "#a8a8a8",
+      "editorGutter.deletedBackground": "#808080",
       "editorWidget.background": theme.panel,
       "editorWidget.border": theme.border,
       "editorSuggestWidget.background": theme.panel,
       "editorSuggestWidget.border": theme.border,
-      "editorSuggestWidget.selectedBackground": "#2e2e33",
+      "editorSuggestWidget.selectedBackground": "#2a2a2a",
       "editorSuggestWidget.highlightForeground": theme.accent,
       "editorHoverWidget.background": theme.panel,
       "editorHoverWidget.border": theme.border,
-      "editor.findMatchBackground": "#3f3f45",
-      "editor.findMatchHighlightBackground": "#303036",
-      "editorBracketMatch.background": "#2c2c31",
+      "editor.findMatchBackground": alphaSuffix(theme.accent, "40"),
+      "editor.findMatchHighlightBackground": "#ffffff1f",
+      "editorBracketMatch.background": "#ffffff14",
       "editorBracketMatch.border": theme.accent,
-      "scrollbarSlider.background": "#33333880",
-      "scrollbarSlider.hoverBackground": "#43434880",
-      "scrollbarSlider.activeBackground": "#53535880",
+      "scrollbarSlider.background": "#ffffff1f",
+      "scrollbarSlider.hoverBackground": "#ffffff33",
+      "scrollbarSlider.activeBackground": "#ffffff47",
       "minimap.background": theme.editor_background,
       "editorOverviewRuler.border": "#00000000",
-      "editorOverviewRuler.addedForeground": "#487e4f",
-      "editorOverviewRuler.modifiedForeground": "#8f7b4a",
-      "editorOverviewRuler.deletedForeground": "#a34a4a",
-      "editorError.foreground": "#e5484d",
-      "editorWarning.foreground": "#d6a44a",
+      "editorOverviewRuler.addedForeground": "#d0d0d0",
+      "editorOverviewRuler.modifiedForeground": "#a8a8a8",
+      "editorOverviewRuler.deletedForeground": "#808080",
+      "editorError.foreground": "#f2f2f2",
+      "editorWarning.foreground": "#bdbdbd",
       "editorInfo.foreground": theme.accent,
       "menu.background": theme.panel,
       "menu.foreground": theme.text,
-      "menu.selectionBackground": "#2c2c31",
+      "menu.selectionBackground": "#2a2a2a",
       "menu.border": theme.border,
     },
   });

@@ -29,12 +29,12 @@ export const defaultConfig: ZenConfig = {
     line_numbers: true,
   },
   theme: {
-    background: "#0b0b0c",
-    panel: "#151517",
-    border: "#27272b",
-    text: "#f0f0f2",
-    accent: "#d9d9de",
-    editor_background: "#08080a",
+    background: "#050505",
+    panel: "#101010",
+    border: "#2a2a2a",
+    text: "#f2f2f2",
+    accent: "#f5f5f5",
+    editor_background: "#0a0a0a",
   },
   ui: {
     sidebar_width: 270,
