@@ -173,7 +173,7 @@ debug = "F5"
 
 ### Görünüm Notları
 
-- Arayüz monokromdur: siyah zemin üzerinde beyaz ve gri tonları kullanılır. Vurgu rengi `[theme].accent` ile değiştirilir; seçimler ve odak halkaları bu renkten türetilir.
+- Arayüz monokromdur: siyah zemin üzerinde beyaz ve gri tonları kullanılır. Kod sözdizimi ise CLion/JetBrains Darcula esintili renklerle vurgulanır: anahtar kelimeler somon, stringler yeşil, sayılar camgöbeği, türler mavi, sabitler mor, yorumlar gridir. Vurgu rengi `[theme].accent` ile değiştirilir; seçimler ve odak halkaları bu renkten türetilir.
 - Pencereler, paneller, sekmeler ve düğmeler yuvarlatılmıştır. Paneller yarı saydam katmanlar kullanır, ancak pencere yüzeyi opak siyahtır; böylece WebKitGTK'da saydam pencere kaynaklı beyaz ekran sorunu oluşmaz.
 - `backdrop-filter`/blur kullanılmaz. Yarı saydam yüzeyleri tamamen opak yapmak için geliştirici araçlarından `<html>` öğesine `reduce-effects` sınıfını ekleyin.
 - `[ui].animations_enabled = false` geçişleri kapatır; işletim sisteminin `prefers-reduced-motion` ayarı da otomatik olarak dikkate alınır.
